@@ -6,8 +6,11 @@ public class Machine {
 	
 	private String name;
 	private double price;
-	Map<String, Integer> currentStock;
+	private Cashier machineBank;
+	private Stock machineStock;
+	private CustomerUX machineUI;
 	
+	//make complex constructor
 	
 	
 	//instantiate stock

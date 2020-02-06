@@ -1,23 +1,12 @@
 package com.techelevator;
 
-public class Candy implements Vendable {
+public class Candy extends VendItem {
 
-	String name;
-	String alert;
-	
-	public Candy(String name) {
-		this.alert = "Munch Munch, Yum!";
-		this.name = name;
+	public Candy(String name, String slotLocation, int price) {
+		super(name, slotLocation, price);
+		// TODO Auto-generated constructor stub
 	}
+
 	
-	@Override
-	public String printDispenseAlert() {
-		System.out.println(alert);
-		return null;
-	}
-	
-	public String getName() {
-		return this.name;
-	}
 	
 }

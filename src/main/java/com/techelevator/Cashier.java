@@ -13,16 +13,18 @@ public class Cashier {
 	private Map<String, Double> salesReport;
 	private double currentBalance;
 	
-	public void feedMoney() {
+	public void feedMoney(double input) {
 		
-		//10% chance it will reject bill (new feature?)
-		//update this.currentBalance
+		this.currentBalance += input;
+		
 	}
 	
-	public boolean purchaseMade() {
+	public boolean purchaseMade(double cost) {
 		boolean vended = true;
 		//reset this.currentBalance
+		this.currentBalance -= cost;
 		//update this.income
+		income.add(cost);
 		return vended;
 	}
 	

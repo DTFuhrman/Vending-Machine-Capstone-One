@@ -1,23 +1,12 @@
 package com.techelevator;
 
-public class Gum implements Vendable {
+public class Gum extends VendItem {
 
-	String name;
-	String alert;
-	
-	public Gum(String name) {
-		this.alert = "Chew Chew, Yum!";
-		this.name = name;
+	public Gum(String name, String slotLocation, int price) {
+		super(name, slotLocation, price);
+		// TODO Auto-generated constructor stub
 	}
+
 	
-	@Override
-	public String printDispenseAlert() {
-		System.out.println(alert);
-		return null;
-	}
-	
-	public String getName() {
-		return this.name;
-	}
 	
 }
