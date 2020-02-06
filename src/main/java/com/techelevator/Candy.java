@@ -1,7 +1,23 @@
 package com.techelevator;
 
-public abstract class Candy implements Vendable {
+public class Candy implements Vendable {
 
-	//make subclasses
+	String name;
+	String alert;
+	
+	public Candy(String name) {
+		this.alert = "Munch Munch, Yum!";
+		this.name = name;
+	}
+	
+	@Override
+	public String printDispenseAlert() {
+		System.out.println(alert);
+		return null;
+	}
+	
+	public String getName() {
+		return this.name;
+	}
 	
 }

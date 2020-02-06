@@ -1,7 +1,23 @@
 package com.techelevator;
 
-public abstract class Gum implements Vendable {
+public class Gum implements Vendable {
 
-	//make subclasses
+	String name;
+	String alert;
+	
+	public Gum(String name) {
+		this.alert = "Chew Chew, Yum!";
+		this.name = name;
+	}
+	
+	@Override
+	public String printDispenseAlert() {
+		System.out.println(alert);
+		return null;
+	}
+	
+	public String getName() {
+		return this.name;
+	}
 	
 }

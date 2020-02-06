@@ -13,10 +13,8 @@ public class Cashier {
 	private Map<String, Double> salesReport;
 	private double currentBalance;
 	
-	
-	
 	public void feedMoney() {
-	
+		
 		//10% chance it will reject bill (new feature?)
 		//update this.currentBalance
 	}
@@ -28,7 +26,7 @@ public class Cashier {
 		return vended;
 	}
 	
-	public int[] giveChange(double amount) { 
+	public int[] getChange(double amount) { 
 		int[] change = new int[4];
 		
 		
