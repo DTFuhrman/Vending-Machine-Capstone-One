@@ -2,14 +2,13 @@ package com.techelevator;
 
 public abstract class VendItem {
 
-
-	String productName;
-	String alert;
-	String slotLocation;
-	int priceInCents;
+	protected int numberOf;
+	private String productName;
+	protected String alert;
+	private int priceInCents;
 	
-	public VendItem(String name, String slotLocation, int price) {
-		
+	public VendItem(String name, int price) {
+		this.numberOf = 5;
 	}
 	
 	public String getDispenseAlert() {
@@ -18,5 +17,17 @@ public abstract class VendItem {
 	
 	public String getName() {
 		return this.productName;
+	}
+	
+	protected void setAlert(String noise) {
+		this.alert = noise;
+	}
+	
+	public void decrimentNumber() {
+		this.numberOf--;
+	}
+	
+	public int getPriceInCents() {
+		return this.priceInCents;
 	}
 }

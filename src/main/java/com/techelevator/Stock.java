@@ -11,7 +11,7 @@ import java.util.Scanner;
 public class Stock {
 
 	private File baseStock;
-	private List<VendItem> machineProducts;
+	private Map<String, VendItem> machineProducts;
 
 	public Stock(String path) {
 		this.baseStock = getFile(path);
@@ -37,27 +37,27 @@ public class Stock {
 
 
 	private void getStock(File inputFile) {
-		machineProducts = new ArrayList<VendItem>();
+		machineProducts = new HashMap<String, VendItem>();
 		try (Scanner reader = new Scanner(inputFile)) {
 			while (reader.hasNextLine()) {
 				String line = reader.nextLine();
 				String[] tempItemDetails = line.split("|");
 				VendItem newItem;
 				if (tempItemDetails[3].toUpperCase().contains("BEVERAGE")) {
-					newItem = new Beverages(tempItemDetails[1], tempItemDetails[0],
+					newItem = new RowOfBeverage(tempItemDetails[1],
 							Integer.parseInt(tempItemDetails[2]));
 				} else if (tempItemDetails[3].toUpperCase().contains("CHIP")) {
-					newItem = new Chips(tempItemDetails[1], tempItemDetails[0],
+					newItem = new RowOfChips(tempItemDetails[1],
 							Integer.parseInt(tempItemDetails[2]));
 				} else if (tempItemDetails[3].toUpperCase().contains("GUM")) {
-					newItem = new Gum(tempItemDetails[1], tempItemDetails[0],
+					newItem = new RowOfGum(tempItemDetails[1],
 							Integer.parseInt(tempItemDetails[2]));
 				} else {
-					newItem = new Candy(tempItemDetails[1], tempItemDetails[0],
+					newItem = new RowOfCandy(tempItemDetails[1],
 							Integer.parseInt(tempItemDetails[2])); 
 					}
 				//make it five instead
-				machineProducts.add(newItem);
+				machineProducts.put(tempItemDetails[0], newItem);
 			}
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
@@ -66,33 +66,16 @@ public class Stock {
 	}
 	
 	//update stock if an item is sold
-	public void removeFromStock() {
-		
+	public void removeFromStock(String key) {
+		VendItem adjust = machineProducts.get(key);
+		adjust.decrimentNumber();
+		machineProducts.put(key, adjust);
 	}
 	
-	//display stock if menu display is selected
-	public void displayStock() {
-		
+	public Map<String, VendItem> getStockDetails() {
+		Map<String, VendItem> temp = new HashMap<String, VendItem>();
+		temp.putAll(machineProducts);
+		return temp;
 	}
 	
 }
-
-//		File inputFile = getInputFileFromUser();
-//		try(Scanner fileScanner = new Scanner(inputFile)) {
-//			while(fileScanner.hasNextLine()) {
-//				String line = fileScanner.nextLine();
-//				String rtn = line.substring(0, 9);
-//				
-//				if(checksumIsValid(rtn) == false) {
-//					System.out.println(line);
-//				}
-//			}
-//		}
-
-		// read new stock file / current stock file
-
-		// create current stock file
-
-		// update current stock file
-
-		// delete machine stock
