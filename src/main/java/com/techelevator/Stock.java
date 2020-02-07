@@ -110,4 +110,10 @@ public class Stock {
 		return temp;
 	}
 	
+	public void displayItems() {
+		for (Map.Entry<String, VendItem> entry : machineProducts.entrySet()) {
+			System.out.println("::: " + entry.getKey() + " ::: " + entry.getValue());
+		}
+	}
+	
 }

@@ -54,11 +54,10 @@ public class Cashier {
 	//check this
 	//this will check for the change that the user will get back. 
 	//the user will only get back nickels, dimes, and quarters.
-	public int[] getChange(int amount) {
+	public int[] getChange() {
 		int[] change = new int[3];
 		int[] values = new int[] { 25, 10, 5 };
-		int amountInPennies = amount;
-		int remainder = amountInPennies;
+		int remainder = currentBalance;
 		int index = 0;
 		for (int value : values) {
 			while (remainder > value) { 
