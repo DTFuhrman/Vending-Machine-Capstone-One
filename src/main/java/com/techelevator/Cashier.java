@@ -29,7 +29,7 @@ public class Cashier {
 	public boolean purchaseMade(Map<String, VendItem> current, String location) {
 		boolean vended = false;
 		//
-		if (current.get(location).numberOf > 0) {
+		if (current.get(location).getNumberAvailable() > 0) {
 			current.get(location).decrimentNumber();
 			// reduce currentBalance by price
 			this.currentBalance -= current.get(location).getPriceInCents();
