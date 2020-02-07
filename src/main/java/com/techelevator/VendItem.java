@@ -57,4 +57,11 @@ public abstract class VendItem {
 	public int getPriceInCents() {
 		return this.priceInCents;
 	}
+
+	@Override
+	public String toString() {
+		return "We have " + numberOf + " of " + productName + " available for $" + priceInCents/100 + "." + priceInCents%100;
+	}
+	
+	
 }

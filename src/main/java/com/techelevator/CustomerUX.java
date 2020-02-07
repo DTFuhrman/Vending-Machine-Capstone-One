@@ -74,14 +74,35 @@ public class CustomerUX {
 		return launched;
 	}
 	
-// might need this for infinite loop
-// and for idle or welcome screen	
-//	public void uxLauncher() {
-//		
-//	}
-	
-	public void displayItems() {
+	public void uxLauncher() {
+		System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+		System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+		System.out.println("$$                            $$");
+		System.out.println("$$         Welcome to         $$");
+		System.out.println("$$       VendoMatic-8000      $$");
+		System.out.println("$$        Press (enter)       $$");
+		System.out.println("$$    to start your journey   $$");
+		System.out.println("$$                            $$");
+		System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+		System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+		System.out.println("$$                            $$");
+		System.out.println("$$    awaiting user input     $$");
+		System.out.println("$$                            $$");
+		System.out.println("$$                            $$");
 		
+		String input = keyboard.nextLine();
+		if (input.toUpperCase().equals("Q") || input.equals("QUIT")) {
+			System.exit(1);
+		} else {
+			launchMenu(mainMenu);
+		}
+	}
+	
+	public void displayItems(Stock ourStock) {
+		Map<String, VendItem> displayStock = ourStock.getStockDetails();
+		for (Map.Entry<String, VendItem> entry : displayStock.entrySet()) {
+			System.out.println("::: " + entry.getKey() + " ::: " + entry.getValue());
+		}
 	}
 	
 	public String acceptInput(String input) {
