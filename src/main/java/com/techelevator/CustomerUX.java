@@ -8,87 +8,124 @@ import java.util.Map;
 import java.util.Scanner;
 
 public class CustomerUX {
-		
+
 	Scanner keyboard = new Scanner(System.in);
-	Map<String, String> mainMenu = new HashMap<String, String>() {{
-		put("(1)", "Display Vending Machine Items");
-		put("(2)", "Purchase");
-		put("(3)", "Exit");
-		//The H means hidden, and it won't display
-		put("(4)H", "Sales Report");
-		put("(5)H", "Security Log");
-		//new test functionality
-		put("(6)H", "Vender Order");
-	}};
-	
-	Map<String, String> purchaseMenu = new HashMap<String, String>() {{
-		put("(1)", "Feed Money");
-		put("(2)", "Select Product");
-		put("(3)", "Finish Transaction");
-		put("(4)", "Back");
-	}};
-	
+	Map<String, String> mainMenu = new HashMap<String, String>() {
+		{
+			put("(1)", "Display Vending Machine Items");
+			put("(2)", "Purchase");
+			put("(3)", "Exit");
+			// The H means hidden, and it won't display
+			put("(4)H", "Sales Report");
+			put("(5)H", "Security Log");
+			// new test functionality
+			put("(6)H", "Vender Order");
+		}
+	};
+
+	Map<String, String> purchaseMenu = new HashMap<String, String>() {
+		{
+			put("(1)", "Feed Money");
+			put("(2)", "Select Product");
+			put("(3)", "Finish Transaction");
+			put("(4)", "Back");
+		}
+	};
+
 	public boolean launchMenu(Map<String, String> toDisplay) {
 		List<String> keys = new ArrayList<String>();
 		boolean launched = true;
 		String userInput = "stay";
 		String menuItem = "";
-		//display menu 
+		// display menu
 		for (Map.Entry<String, String> entry : toDisplay.entrySet()) {
 			if (!entry.getKey().contains("H")) {
-			System.out.println("::: " + entry.getKey() + " ::: " + entry.getValue());
+				System.out.println("::: " + entry.getKey() + " ::: " + entry.getValue());
 			}
 		}
-		
-		//get input from user
+
+		// get input from user
 		userInput = keyboard.nextLine();
-		
-		//if the key contains the input it will display the menu
+
+		// if the key contains the input it will display the menu
 		if (toDisplay.containsKey("(" + userInput + ")") || toDisplay.containsKey("(" + userInput + ")H")) {
 			menuItem = toDisplay.get(userInput);
 		}
-		
-		//if not it will display an error and relaunch the menu
+
+		// if not it will display an error and relaunch the menu
 		else {
 			System.out.println("That's not on the menu!\n\n\n\n");
 			launchMenu(toDisplay);
 		}
-		
+
 		if (menuItem.contentEquals("Display Vending Machine Items")) {
 			displayItems();
 			System.out.println("Hit enter to continue");
 			keyboard.nextLine();
 			launchMenu(mainMenu);
 		}
-		
-		if (menuItem.contentEquals("Feed Money")) {}
-		if (menuItem.contentEquals("Feed Money")) {}
-		if (menuItem.contentEquals("Feed Money")) {}
-		if (menuItem.contentEquals("Feed Money")) {}
-		if (menuItem.contentEquals("Feed Money")) {}
-		if (menuItem.contentEquals("Feed Money")) {}
-		if (menuItem.contentEquals("Feed Money")) {}
-		if (menuItem.contentEquals("Feed Money")) {}
-		if (menuItem.contentEquals("Feed Money")) {}
-		
+
+		if (menuItem.contentEquals("Purchase")) {
+			displayItems();
+			System.out.println("Please make a selection");
+			keyboard.nextLine();
+			launchMenu(purchaseMenu);
+
+		}
+		if (menuItem.contentEquals("Exit")) {
+			displayItems();
+			System.out.println("Exiting the current menu");
+			keyboard.nextLine();
+			// launchMenu(mainMenu);
+		}
+		if (menuItem.contentEquals("Sales Report")) {
+			// System.out.println("Getting sales report");
+			keyboard.nextLine();
+			// launchMenu(salesReport);
+
+		}
+		if (menuItem.contentEquals("Security Log")) {
+			// getting security log
+			keyboard.nextLine();
+			// launchMenu(securityLog);
+		}
+		if (menuItem.contentEquals("Vendor Order")) {
+			keyboard.nextLine();
+			// launchMenu(vendorOrder);
+		}
+		if (menuItem.contentEquals("Feed Money")) {
+			displayItems();
+			System.out.println("Please insert bills");
+			keyboard.nextLine();
+			launchMenu(purchaseMenu);
+		}
+		if (menuItem.contentEquals("Finish Transaction")) {
+			displayItems();
+			System.out.println("Transaction is complete, enjoy!");
+			launchMenu(mainMenu); // after purchase it should take back to welcome screen?
+
+		}
+		if (menuItem.contentEquals("Exit")) {
+			displayItems();
+			System.out.println("Returning to main menu");
+			launchMenu(mainMenu);
+		}
+
 		return launched;
 	}
-	
+
 // might need this for infinite loop
 // and for idle or welcome screen	
 //	public void uxLauncher() {
 //		
 //	}
-	
+
 	public void displayItems() {
-		
+
 	}
-	
+
 	public String acceptInput(String input) {
 		return "";
 	}
-	
-	
-		
-	
+
 }
