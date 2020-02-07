@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.TreeMap;
 
 public class Stock {
 	
@@ -32,7 +33,7 @@ public class Stock {
 	private File baseStock;
 	//We also have a map that keeps track of the slot location
 	//and the row object in that location
-	private Map<String, VendItem> machineProducts;
+	protected Map<String, VendItem> machineProducts;
 
 	//This constructor will be called by the VendingMachine Class
 	//because each machine will have a stock, a cashier, and a UX
@@ -68,24 +69,27 @@ public class Stock {
 	//This helper method fills the machine when it initializes
 	//it is only called by the constructor, so it is private
 	private void getStock(File inputFile) {
-		machineProducts = new HashMap<String, VendItem>();
+		machineProducts = new TreeMap<String, VendItem>();
 		try (Scanner reader = new Scanner(inputFile)) {
 			while (reader.hasNextLine()) {
 				String line = reader.nextLine();
-				String[] tempItemDetails = line.split("|");
+				String[] tempItemDetails = line.split("\\|");
+				String priceString = tempItemDetails[2];
+				Double priceDoublePennies = Double.parseDouble(priceString);
+				int price = priceDoublePennies.intValue();
 				VendItem newItem;
 				if (tempItemDetails[3].toUpperCase().contains("BEVERAGE")) {
 					newItem = new RowOfBeverage(tempItemDetails[1],
-							Integer.parseInt(tempItemDetails[2]));
+							price);
 				} else if (tempItemDetails[3].toUpperCase().contains("CHIP")) {
 					newItem = new RowOfChips(tempItemDetails[1],
-							Integer.parseInt(tempItemDetails[2]));
+							price);
 				} else if (tempItemDetails[3].toUpperCase().contains("GUM")) {
 					newItem = new RowOfGum(tempItemDetails[1],
-							Integer.parseInt(tempItemDetails[2]));
+							price);
 				} else {
 					newItem = new RowOfCandy(tempItemDetails[1],
-							Integer.parseInt(tempItemDetails[2])); 
+							price); 
 					}
 				//make it five instead
 				machineProducts.put(tempItemDetails[0], newItem);
@@ -103,17 +107,16 @@ public class Stock {
 		machineProducts.put(key, adjust);
 	}
 	
-	//this returns the detials so we can display them
+	//this returns the details so we can display them
 	public Map<String, VendItem> getStockDetails() {
-		Map<String, VendItem> temp = new HashMap<String, VendItem>();
+		Map<String, VendItem> temp = new TreeMap<String, VendItem>();
 		temp.putAll(machineProducts);
 		return temp;
 	}
 	
-	public void displayItems() {
+	public void displayStock() {
 		for (Map.Entry<String, VendItem> entry : machineProducts.entrySet()) {
 			System.out.println("::: " + entry.getKey() + " ::: " + entry.getValue());
 		}
 	}
-	
 }

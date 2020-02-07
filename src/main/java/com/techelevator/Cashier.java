@@ -33,6 +33,10 @@ public class Cashier {
 		return this.currentBalance;
 	}
 	
+	public String getCurrentBalanceAsString() {
+		return "$" + Integer.toString(this.currentBalance/100) + "." + Integer.toString(this.currentBalance%100);
+	}
+	
 	//this is checking the current stock for the items in the vending machine. 
 	//this will update once a purchase is made, it will also know the row the product is in
 	//the price and the type of product for purchase. 
