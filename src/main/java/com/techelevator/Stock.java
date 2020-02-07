@@ -103,6 +103,7 @@ public class Stock {
 		machineProducts.put(key, adjust);
 	}
 	
+	//this returns the detials so we can display them
 	public Map<String, VendItem> getStockDetails() {
 		Map<String, VendItem> temp = new HashMap<String, VendItem>();
 		temp.putAll(machineProducts);

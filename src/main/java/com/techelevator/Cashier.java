@@ -70,7 +70,7 @@ public class Cashier {
 		return change;
 	}
 
-	// fixme
+	// fixme fixme fixme fixme fixme fixme fixme fixme fixme fixme fixme
 	//this will track the log of purchases 
 	//what was purchased, the date, and the time, also what bill was used for purchase. 
 	private String getDateForFileNames() {
