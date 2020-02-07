@@ -32,19 +32,28 @@ public abstract class VendItem {
 		return this.productName;
 	}
 	
-	//This will allow the constructor 
+	//This is protected to allow the constructor 
+	//in the child class to set the alert 
 	protected void setAlert(String noise) {
 		this.alert = noise;
 	}
 	
+	//This is a getter for NumberOf
 	public int getNumberAvailable() {
 		return this.numberOf;
 	}
 	
+	//This is a method of decreasing our stock in a row
+	//so that when an item is purchased the cashier can 
+	//remove the item
 	public void decrimentNumber() {
 		this.numberOf--;
 	}
 	
+	//We chose to do all of our money in cents as ints 
+	//because this will avoid rounding errors
+	//and we do not expect to ever collect more than 2.1 billion cents
+	//Just in case, we should create a redundancy in the cashier.
 	public int getPriceInCents() {
 		return this.priceInCents;
 	}

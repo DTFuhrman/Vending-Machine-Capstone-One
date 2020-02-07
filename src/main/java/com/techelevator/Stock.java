@@ -28,18 +28,26 @@ public class Stock {
 	// 	}
 
 
-	// 	// create current stock file
-
-	// 	// update current stock file
-
+	//We have a base stock file that represents the main inventory we load from
 	private File baseStock;
+	//We also have a map that keeps track of the slot location
+	//and the row object in that location
 	private Map<String, VendItem> machineProducts;
 
+	//This constructor will be called by the VendingMachine Class
+	//because each machine will have a stock, a cashier, and a UX
+	//The constructor fills the stock fully from the original file
+	//But it could be updated to track the stock through persistent memory by changing
+	//which file it reads from.
 	public Stock(String path) {
 		this.baseStock = getFile(path);
 		getStock(this.baseStock);
 	}
 	
+	//this is a helper method to validate a path 
+	//before we start pulling from it or writing to it
+	//right now it ensures the file exists
+	//but it can be ALTERED to throw a message if the file exists or expect the file to exist
 	public File getFile(String path) {
 
 		File fileToRead = new File(path);
@@ -48,7 +56,7 @@ public class Stock {
 			System.out.println(path + "... I can't find that file");
 			//call UX to handle this and ask again
 			System.exit(1);
-		} else if (!fileToRead.isFile()) {
+		} else if (!fileToRead.isFile()) {//checks to make sure it's not a directory
 			System.out.println(path + " is actually not a file");
 			//call UX to handle this and ask again
 			System.exit(1);
@@ -57,7 +65,8 @@ public class Stock {
 		return fileToRead;
 	}
 
-
+	//This helper method fills the machine when it initializes
+	//it is only called by the constructor, so it is private
 	private void getStock(File inputFile) {
 		machineProducts = new HashMap<String, VendItem>();
 		try (Scanner reader = new Scanner(inputFile)) {
