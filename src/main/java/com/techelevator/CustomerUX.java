@@ -54,7 +54,13 @@ public class CustomerUX {
 			launchMenu(toDisplay);
 		}
 		
-		if (menuItem.contentEquals("Feed Money")) {}
+		if (menuItem.contentEquals("Display Vending Machine Items")) {
+			displayItems();
+			System.out.println("Hit enter to continue");
+			keyboard.nextLine();
+			launchMenu(mainMenu);
+		}
+		
 		if (menuItem.contentEquals("Feed Money")) {}
 		if (menuItem.contentEquals("Feed Money")) {}
 		if (menuItem.contentEquals("Feed Money")) {}
