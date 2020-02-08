@@ -21,6 +21,8 @@ public abstract class VendItem {
 	//by the type of item
 	public VendItem(String name, int price) {
 		this.numberOf = 5;
+		this.productName = name;
+		this.priceInCents = price;
 	}
 	
 	//This method will return the noise it is supposed to make when it vends
