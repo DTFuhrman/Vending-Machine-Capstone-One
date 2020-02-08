@@ -2,6 +2,7 @@ package com.techelevator;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.time.LocalDateTime;
@@ -16,15 +17,13 @@ public class Data {
 
 //	Constructor
 
-
-	public Data(String initialStockPath) {
+	public Data(String path) {
 		// STOCK ***
-		this.initialStockPath = initialStockPath;
-		this.currentStockPath = getDateForFileNames() + "CurrentStock.txt";
-		this.initialStockFile = getFile(initialStockPath);
+		this.initialStockPath = path;
+		this.initialStockFile = getFile(path);
 		// set currentStockList
-		this.currentStockList = getStock(initialStockFile);
-		
+		this.currentStockList = (initializeStock(initialStockFile));
+		this.currentStockPath = getDateForFileNames() + "CurrentStock.txt";
 		// SECURITY LOG ***
 		this.currentLogPath = "log.txt";
 		this.currentLogFile = newFile(initialStockPath);
@@ -96,21 +95,23 @@ public class Data {
 	private int currentBalance;
 	private String currentSelection;
 
-	//// Scanners *************************************** SCANNERS
-//		initial stock reader
-	public Scanner initialStockReader; // = new Scanner(initialStockPath);
-//		current stock reader
-	public Scanner currentStockReader; // = new Scanner(currentStockPath);
-//		current stock printer
-	public PrintWriter currentStockPrinter; // = new PrintWriter(currentStockPath);
-//		current stock file writer
-	public FileWriter currentStockFileWriter; // = new FileWriter(currentStockPath);
-//		log reader
-	public Scanner logReader; // = new Scanner(currentLogPath);
-//		log printer
-	public PrintWriter logPrinter; // = new PrintWriter(currentLogPath);
-//		log file writer
-	public FileWriter logFileWriter; // = new FileWriter(currentLogPath);
+//	//// Scanners *************************************** SCANNERS
+////		initial stock reader
+//	public Scanner initialStockReader; // = new Scanner(initialStockPath);
+////		current stock reader
+//	public PrintWriter initialStockPrinter; // = new PrintWriter(initialStockPath);
+////		current stock reader
+//	public Scanner currentStockReader; // = new Scanner(currentStockPath);
+////		current stock printer
+//	public PrintWriter currentStockPrinter; // = new PrintWriter(currentStockPath);
+////		current stock file writer
+//	public FileWriter currentStockFileWriter; // = new FileWriter(currentStockPath);
+////		log reader
+//	public Scanner logReader; // = new Scanner(currentLogPath);
+////		log printer
+//	public PrintWriter logPrinter; // = new PrintWriter(currentLogPath);
+////		log file writer
+//	public FileWriter logFileWriter; // = new FileWriter(currentLogPath);
 
 //	Helper METHODS***********************
 
@@ -157,6 +158,7 @@ public class Data {
 	public String getCurrentSelection() {
 		return this.currentSelection;
 	}
+	
 
 	// fixme fixme fixme fixme fixme fixme fixme fixme fixme fixme fixme
 	// this will track the log of purchases
@@ -234,32 +236,33 @@ public class Data {
 
 	// This helper method fills the machine when it initializes
 	// it is only called by the constructor, so it is private
-	private Map<String, VendItem> getStock(File inputFile) {
+	public  Map<String, VendItem> initializeStock(File initialStockFile) {
 		Map<String, VendItem> stockList = new TreeMap<String, VendItem>();
-		try (Scanner initialStockReader = new Scanner(inputFile)) {
-			while (initialStockReader.hasNextLine()) {
-				String line = initialStockReader.nextLine();
-				String[] tempItemDetails = line.split("\\|");
-				String priceString = tempItemDetails[2];
-				Double priceDoublePennies = Double.parseDouble(priceString);
-				priceDoublePennies *= 10;
-				int price = priceDoublePennies.intValue();
-				VendItem newItem;
-				if (tempItemDetails[3].toUpperCase().contains("DR")) {
-					newItem = new RowOfBeverage(tempItemDetails[1], price);
-				} else if (tempItemDetails[3].toUpperCase().contains("CH")) {
-					newItem = new RowOfChips(tempItemDetails[1], price);
-				} else if (tempItemDetails[3].toUpperCase().contains("G")) {
-					newItem = new RowOfGum(tempItemDetails[1], price);
-				} else {
-					newItem = new RowOfCandy(tempItemDetails[1], price);
+		try (Scanner initialStockReader = new Scanner(initialStockFile)) {
+				while (initialStockReader.hasNext()) {
+					String line = initialStockReader.nextLine();
+					String[] tempItemDetails = line.split("\\|");
+					String priceString = tempItemDetails[2];
+					Double priceDoublePennies = Double.parseDouble(priceString);
+					priceDoublePennies *= 100;
+					int price = priceDoublePennies.intValue();
+					VendItem newItem;
+					if (tempItemDetails[3].toUpperCase().contains("DR")) {
+						newItem = new RowOfBeverage(tempItemDetails[1], price);
+					} else if (tempItemDetails[3].toUpperCase().contains("CH")) {
+						newItem = new RowOfChips(tempItemDetails[1], price);
+					} else if (tempItemDetails[3].toUpperCase().contains("G")) {
+						newItem = new RowOfGum(tempItemDetails[1], price);
+					} else {
+						newItem = new RowOfCandy(tempItemDetails[1], price);
+					}
+					stockList.put(tempItemDetails[0], newItem);
 				}
-				stockList.put(tempItemDetails[0], newItem);
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
 		return stockList;
 	}
 

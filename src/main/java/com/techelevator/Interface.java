@@ -7,8 +7,8 @@ import java.util.Scanner;
 public class Interface {
 
 	public Scanner keyboard = new Scanner(System.in);
-		
 	
+
 	public void printMenu(String[] menu) {
 		for (String str : menu) {
 			if (!str.startsWith("h")) {
@@ -16,7 +16,6 @@ public class Interface {
 			}
 		}
 	}
-	
 	
 	public void printCurrentStock(Map<String, VendItem> stock) {
 		for (Map.Entry<String, VendItem> entry : stock.entrySet()) {

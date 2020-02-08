@@ -6,9 +6,9 @@ public class Controller {
 
 	private Data data;
 	private Interface ux;
-
-	public Controller(String stockPath) {
-		data = new Data(stockPath);
+	
+	public Controller(String path) {
+		data = new Data(path);
 		ux = new Interface();
 	}
 
@@ -23,7 +23,7 @@ public class Controller {
 		for (int value : values) {
 			while (changeDue > value) {
 				changeDue -= value;
-				change[1] += 1;
+				change[index] += 1;
 			}
 			index++;
 		}
@@ -86,7 +86,7 @@ public class Controller {
 			} else if (mainInput.contains("2")) {
 				launchPurchase();
 			} else if (mainInput.contains("3")) {
-				break;
+				launcher();
 			} else if (mainInput.contains("4")) {
 				launchSale();
 			} else if (mainInput.contains("5")) {
@@ -140,7 +140,20 @@ public class Controller {
 	}
 
 	private void launchVend() {
-
+		if (data.getCurrentBalance() > data.getPrice(data.getCurrentSelection())) {
+		System.out.println("You selected " + data.getCurrentSelection());
+		System.out.println("That costs " + data.getPrice(data.getCurrentSelection()));
+		System.out.println("You had " + data.getCurrentBalanceAsString());
+		data.setCurrentBalance(-data.getPrice(data.getCurrentSelection()));
+		System.out.println("You now have " + data.getCurrentBalanceAsString());
+		System.out.println("CCA-CHUNK CLINK");
+		System.out.println(data.currentStockList.get(data.getCurrentSelection()).getDispenseAlert());
+		} else {
+			int stillOwed = data.getPrice(data.getCurrentSelection()) - data.getCurrentBalance();
+			String strStillOwed = "$" + stillOwed/100 + "." + stillOwed%100;
+			System.out.println("Please insert " + strStillOwed);
+			launchFeed();
+		}
 	}
 
 	private void launchCancel() {
@@ -148,15 +161,19 @@ public class Controller {
 		getChange();
 		
 		System.out.println("Returning To Main Menu");
+		ux.pauseScrolling();
+		launchMain();
 	}
 
 	private void launchFeed() {
 		System.out.println("We accept $1, $2, $5, $10 and $20 bills");
 		String stringInput =  ux.getInput();
+//		if(stringInput.replaceAll("", replacement))
+//		stringInput = stringInput.
 		int input = Integer.parseInt(stringInput) * 100;
 		if (input == 100 || input == 200 || input == 500 || input == 1000 || input == 2000) {
 			data.setCurrentBalance(input);
-			System.out.println("You ");
+			System.out.println("You entered $" + stringInput);
 		} else {
 		System.out.println("That didn't work");
 		}
