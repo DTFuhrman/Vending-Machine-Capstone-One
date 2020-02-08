@@ -13,28 +13,29 @@ import java.util.Scanner;
 import java.util.TreeMap;
 
 public class Data {
-	
+
 //	Constructor
 
+
 	public Data(String initialStockPath) {
-		//STOCK			***
+		// STOCK ***
 		this.initialStockPath = initialStockPath;
 		this.currentStockPath = getDateForFileNames() + "CurrentStock.txt";
 		this.initialStockFile = getFile(initialStockPath);
-		//set currentStockList
+		// set currentStockList
 		this.currentStockList = getStock(initialStockFile);
-		//SECURITY LOG 	***
+		
+		// SECURITY LOG ***
 		this.currentLogPath = "log.txt";
 		this.currentLogFile = newFile(initialStockPath);
-		//SALES			***
-		this.salesPath = "sales-for-" +getDateForFileNames() + "report.txt";
+		// SALES ***
+		this.salesPath = "sales-for-" + getDateForFileNames() + "report.txt";
 		this.salesReport = newFile(initialStockPath);
-		//Balance and Deposits
+		// Balance and Deposits
 		this.currentBalance = 0;
 		this.currentSelection = "A1";
-	}	
-	
-	
+	}
+
 	//// Menus **** List<object>
 //		Front Menu
 	private final String[] WELCOME_SCREEN = new String[] { "[VENDOMATIC-8000]$$$$$$$$$$$$$$$",
@@ -46,24 +47,22 @@ public class Data {
 			"$$$$$$$$$$$$$$$$$[TECH$ELEVATOR]", };
 //		Main menu
 	private final String[] MAIN_MENU = new String[] { "h(0) Security Log Menu", "(1)  Display Vending Machine Items",
-			"(2)  Enter Purchase Menu", "(3)  Exit", "h(4)  Sales Report Menu",
-			"h(5)  Order Report Menu"};
+			"(2)  Enter Purchase Menu", "(3)  Exit", "h(4)  Sales Report Menu", "h(5)  Order Report Menu" };
 //		Purchase Menu
-	private final String[] PURCHASE_MENU = new String[] { "h(0)", "(1)  Feed Money",
-			"(2)  Select Item", "(3)  Finish Transaction", "(4)  Cancel Transaction"};
+	private final String[] PURCHASE_MENU = new String[] { "h(0)", "(1)  Feed Money", "(2)  Select Item",
+			"(3)  Finish Transaction", "(4)  Cancel Transaction" };
 //		Log Menu
-	private final String[] LOG_MENU = new String[] { "h(0)", "(1)  View Security Log",
-			"(2) Back to Main Menu"};
+	private final String[] LOG_MENU = new String[] { "h(0)", "(1)  View Security Log", "(2) Back to Main Menu" };
 //		Sales Report Menu
 	private final String[] REPORT_MENU = new String[] { "h(0)", "(1)  Write new Report File", "(2)  View Report",
-			"(3)  Back To Main Menu"};
+			"(3)  Back To Main Menu" };
 //		Vendor Order Menu
-	private final String[] ORDER_MENU = new String[] { "h(0)", "UPCOMING FUNCIONTALITY!", "(any key)  Back to Main Menu"};
+	private final String[] ORDER_MENU = new String[] { "h(0)", "UPCOMING FUNCIONTALITY!",
+			"(any key)  Back to Main Menu" };
 //		array of menus
-	private final String[][] menus = new String[][] { WELCOME_SCREEN, MAIN_MENU, PURCHASE_MENU, LOG_MENU, REPORT_MENU, ORDER_MENU };
+	private final String[][] menus = new String[][] { WELCOME_SCREEN, MAIN_MENU, PURCHASE_MENU, LOG_MENU, REPORT_MENU,
+			ORDER_MENU };
 
-	
-	
 	//// Stock **** Files ***OR*** Maps <key:String, value:VendItem>
 //		Initial Stock File	/ load
 	private String initialStockPath;
@@ -73,8 +72,7 @@ public class Data {
 //		Current Stock File 	/(print to/write file)
 	private String currentStockPath;
 	private File currentStockFile;
-	
-	
+
 	//// Log ***************************** LOG
 //		current log being written; FILE
 	private List<String> logList = new ArrayList<String>();
@@ -83,7 +81,7 @@ public class Data {
 //		most recent log
 	private String lastLogPath;
 	private File lastLog;
-	
+
 	//// Sales Report ***************************** LOG
 //		current report being written; FILE
 	private List<String> salesList = new ArrayList<String>();
@@ -91,16 +89,13 @@ public class Data {
 	private String salesPath;
 	private File salesReport;
 //		most recent log
-	
-	
+
 	//// Money ***************************** Current State STUFF
 //	Income Bank  		/ Get(Sale report)
 //  current balance
 	private int currentBalance;
 	private String currentSelection;
-	
-	
-	
+
 	//// Scanners *************************************** SCANNERS
 //		initial stock reader
 	public Scanner initialStockReader; // = new Scanner(initialStockPath);
@@ -116,18 +111,11 @@ public class Data {
 	public PrintWriter logPrinter; // = new PrintWriter(currentLogPath);
 //		log file writer
 	public FileWriter logFileWriter; // = new FileWriter(currentLogPath);
-	
-
-	
 
 //	Helper METHODS***********************
 
-	
-	
-
 //	 GETTERS/SETTERS *********************
 
-	
 	public String[] getMenu(int menuIndex) {
 		return menus[menuIndex];
 	}
@@ -135,11 +123,11 @@ public class Data {
 	public int getCurrentBalance() {
 		return this.currentBalance;
 	}
-	
+
 	protected void setCurrentBalance(int amount) {
 		this.currentBalance += amount;
 	}
-	
+
 	public boolean checkStock(String key) {
 		boolean hasItem = false;
 		if (currentStockList.get(key).getNumberAvailable() > 0) {
@@ -147,7 +135,7 @@ public class Data {
 		}
 		return hasItem;
 	}
-	
+
 	public int getPrice(String key) {
 		int price = currentStockList.get(key).getPriceInCents();
 		return price;
@@ -156,13 +144,11 @@ public class Data {
 	public void decrimentStock(String key) {
 		currentStockList.get(key).decrimentNumber();
 	}
-	
-	
+
 //	TO STRINGS
 	public String getCurrentBalanceAsString() {
 		return "$" + Integer.toString(this.currentBalance / 100) + "." + Integer.toString(this.currentBalance % 100);
 	}
-
 
 	public void setCurrentSelection(String input) {
 		this.currentSelection = input;
@@ -171,7 +157,6 @@ public class Data {
 	public String getCurrentSelection() {
 		return this.currentSelection;
 	}
-
 
 	// fixme fixme fixme fixme fixme fixme fixme fixme fixme fixme fixme
 	// this will track the log of purchases
@@ -192,7 +177,7 @@ public class Data {
 
 	// this will print to the file the report for sales of products
 	public void printToLog(String output) {
-		
+
 	}
 
 	/// FROM STOCK!!! *****************************
@@ -246,10 +231,7 @@ public class Data {
 
 		return fileToRead;
 	}
-	
-	
-	
-	
+
 	// This helper method fills the machine when it initializes
 	// it is only called by the constructor, so it is private
 	private Map<String, VendItem> getStock(File inputFile) {
@@ -283,7 +265,6 @@ public class Data {
 
 	// update stock if an item is sold
 
-
 	// this returns the details so we can display them
 	public Map<String, VendItem> getStockDetails() {
 		Map<String, VendItem> temp = new TreeMap<String, VendItem>();
@@ -291,5 +272,4 @@ public class Data {
 		return temp;
 	}
 
-	
 }
