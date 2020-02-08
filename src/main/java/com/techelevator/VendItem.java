@@ -12,6 +12,7 @@ public abstract class VendItem {
 	//our alert is protected instead of private so we can set it in the child class
 	protected String alert;
 	private int priceInCents;
+	private String slotID;
 	
 	
 	//our constructor requires the name of the product and the price
