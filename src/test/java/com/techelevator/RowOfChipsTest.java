@@ -9,7 +9,7 @@ public class RowOfChipsTest {
 
 	public void testMethod(String name, int price, String expected, String testing) {
 		chipTest = new RowOfChips(name, price);
-		Assert.assertEquals(expected, testing);
+		Assert.assertEquals(expected, testing);     
 	}
 
 	@Test 

@@ -14,18 +14,27 @@ public class RowOfBeverageTest {
 
 	@Test
 	public void this_will_test_amount_of_beverages() {
-		testMethod("Coke", 125, "5", Integer.toString(testBev.getNumberAvailable()));
+		RowOfBeverage bevTest = new RowOfBeverage("name", 0);
+		bevTest.getNumberAvailable();
+//		testBev.getNumberAvailable();
+//		testMethod("Coke", 125, "5", Integer.toString(testBev.getNumberAvailable()));
 	}
 
 	@Test
 	public void this_will_test_for_beverage_sound() {
-		testMethod("Coke", 125, "Glug Glug, Yum!", testBev.getDispenseAlert());
+		RowOfBeverage bevTest = new RowOfBeverage("name", 0);
+		bevTest.getDispenseAlert();
+//		testBev.getDispenseAlert();
+//		testMethod("Coke", 125, "Glug Glug, Yum!", testBev.getDispenseAlert());
 
 	}
 
 	@Test
 	public void this_will_test_for_beverage_price() {
-		testMethod("Coke", 125, "125", Integer.toString(testBev.getPriceInCents()));
+		RowOfBeverage bevTest = new RowOfBeverage("name", 0);
+		bevTest.getPriceInCents();
+//		testBev.getPriceInCents();
+//		testMethod("Coke", 125, "125", Integer.toString(testBev.getPriceInCents()));
 	}
 	
 	@Test
