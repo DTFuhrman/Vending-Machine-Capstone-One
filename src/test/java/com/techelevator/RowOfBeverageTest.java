@@ -15,7 +15,7 @@ public class RowOfBeverageTest {
 	@Test
 	public void this_will_test_amount_of_beverages() {
 		RowOfBeverage testBev = new RowOfBeverage ("Coke" , 2);
-		Assert.assertEquals("5", testBev.getNumberAvailable());
+		Assert.assertEquals(5, testBev.getNumberAvailable());
 	}
 
 //		testMethod("Coke", 125, "5", Integer.toString(testBev.getNumberAvailable()));
@@ -32,8 +32,8 @@ public class RowOfBeverageTest {
 
 	@Test
 	public void this_will_test_for_beverage_price() {
-		RowOfBeverage bevTest = new RowOfBeverage("name", 0);
-		Assert.assertEquals("price", testBev.getPriceInCents());
+		RowOfBeverage testBev = new RowOfBeverage("name", 200);
+		Assert.assertEquals(200, testBev.getPriceInCents());
 		
 //		testMethod("Coke", 125, "125", Integer.toString(testBev.getPriceInCents()));
 	}
