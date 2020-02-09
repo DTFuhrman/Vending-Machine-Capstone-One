@@ -180,7 +180,7 @@ public class Memory {
 	//// LOG WRITING AND READING WILL GO HERE
 	// this will print input into a log list
 	public void appendToLog(String input) {
-		try (FileWriter logWriter = new FileWriter(logFile)) {
+		try (FileWriter logWriter = new FileWriter(logFile, true)) {
 			
 			logWriter.append(input);
 			
