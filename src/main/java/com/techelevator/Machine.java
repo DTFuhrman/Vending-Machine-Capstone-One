@@ -19,15 +19,16 @@ public class Machine {
 		int[] change = new int[3];
 		int[] values = new int[] { 25, 10, 5 };
 		int changeDue = data.getCurrentBalance();
+		data.setCurrentBalance(-data.getCurrentBalance());
+		data.logChange(changeDue);
 		int index = 0;
 		for (int value : values) {
-			while (changeDue > value) {
+			while (changeDue >= value) {
 				changeDue -= value;
 				change[index] += 1;
 			}
 			index++;
 		}
-		data.setCurrentBalance(-data.getCurrentBalance());
 
 		System.out.println("Here is your change:");
 		if (change[0]==1) {System.out.println("1 Quarter");}
@@ -53,10 +54,17 @@ public class Machine {
 	public void launcher() {
 		String userInput;
 		ux.printMenu(data.getMenu(0));
-		ux.pauseScrolling();
+		adminOptions(ux.pauseScrolling());
 		launchMain();
 	}
-
+	
+	public void adminOptions(String input) {
+		if(input.toUpperCase().contains("Q")) {
+			data.logShutDown();
+			System.exit(1);
+		}
+	}
+	
 	public void launchMain() {
 		while (true) {
 			String mainInput;
@@ -75,6 +83,8 @@ public class Machine {
 				LaunchOrder();
 			} else if (mainInput.contains("0")) {
 				launchLog();
+			} else {
+				System.out.println("please make a valid selection");
 			}
 		}
 	}
@@ -90,35 +100,84 @@ public class Machine {
 			} else if (purchaseInput.contains("2")) {
 				launchSelect();
 			} else if (purchaseInput.contains("3")) {
-				launchVend();
-			} else if (purchaseInput.contains("4")) {
-				launchCancel();
+				launchFinishTransaction();
+			} else {
+				System.out.println("please make a valid selection");
 			}
 		}
 	}
 
 	private void launchSelect() {
-		Map<String, VendItem> items = data.getStockDetails();
+		//enter menu loop
 		while (true) {
+			//grab an updated copy of the items currently available
+			Map<String, VendItem> items = data.getStockDetails();
+			//print the current stock
 			ux.printCurrentStock(items);
-
 			System.out.println("*************************************************");
+			//print their current balance
 			ux.printCurrentBalance(data.getCurrentBalance());
+			//prompt the user to enter a selection or type cancel
 			System.out.println("Make your selection, or (cancel)");
+			//record their input in uppercase
 			String selection = ux.getInput().toUpperCase();
-			if (items.containsKey(selection) && items.get(selection).getNumberAvailable() > 0) {
+			//if the slot number exists AND the their selection is available in the actual stock
+			if (items.containsKey(selection) && data.currentStockList.get(selection).getNumberAvailable() > 0) {
+				//then set the current selection as that key
 				data.setCurrentSelection(selection);
+				//let the user know what they selected
 				System.out.println("You Selected " + data.getCurrentSelection() + "!");
 				System.out.println("Solid Choice!");
+				
+				//if the current balance is greater than the cost of the item
+				if (data.getCurrentBalance() > data.getPrice(data.getCurrentSelection())) {
+					//tell them how much that costs
+				int cost = data.getPrice(data.getCurrentSelection());
+				System.out.println("That costs $" + cost/100 + "." + cost%100);
+					//tell them how much they had
+				System.out.println("You had " + data.getCurrentBalanceAsString());
+				//log the purchase
+				data.logPurchase(data.getCurrentSelection(), data.currentStockList.get(data.getCurrentSelection()).getName(), data.getCurrentBalance(), data.getCurrentBalance()-cost);
+				//subtract cost of item from current balance
+				data.setCurrentBalance(-data.getPrice(data.getCurrentSelection()));
+				//record the money in deposits
+				data.addDeposit(data.getPrice(data.getCurrentSelection()));
+				//decrease the number of the item available for sale
+				data.decrimentStock(data.getCurrentSelection());
+				//tell user their new balance
+				System.out.println("You now have " + data.getCurrentBalanceAsString());
+				//vend the item
+				System.out.println("*******************");
+				System.out.println("CCA-CHUNK CLINK");
+				System.out.println(data.currentStockList.get(data.getCurrentSelection()).getDispenseAlert());
+				System.out.println("*******************");
+				System.out.println("*******************\n\n\n");
+				//let them enjoy their purchase before returning them to the top of the selection menu
 				ux.pauseScrolling();
-				launchPurchase();
-			} else if (items.containsKey(selection)) {
-				System.out.println("SOLD OUT, Make new selection");
+				//if the balance ISN'T higher than the price
+				} else {
+					//Tell them how much they still owe
+					int stillOwed = data.getPrice(data.getCurrentSelection()) - data.getCurrentBalance();
+					String strStillOwed = "$" + stillOwed/100 + "." + stillOwed%100;
+					//helpfully prompt them to give us more money
+					System.out.println("Please insert " + strStillOwed);
+					//give them time to read, then throw them back to the purchase menu, 
+					//where they will hopefully give us more money
+					ux.pauseScrolling();
+					launchPurchase();
+				}
+				//if they typed cancel instead of a slot item, return them to the purchase menu
 			} else if (selection.toUpperCase().contains("CAN")) {
 				System.out.println("Returning to Purchase Menu");
 				launchPurchase();
-			} else {
-				System.out.println("Please make a valid selection");
+				//if the selection they made was not a valid key
+				//ask them to make a new selection and return them to the top of the menu loop
+			} else if (!items.containsKey(selection)) {
+				System.out.println("Please make a valid selection or type cancel");
+				//if their are not enough items for them to buy, let them know it's sold out and 
+				//return them to the top of the menu loop
+			} else if (!(items.get(selection).getNumberAvailable() > 0)) {
+				System.out.println("SOLD OUT, Make new selection");
 			}
 		}
 	}
@@ -127,48 +186,22 @@ public class Machine {
 	// this will update once a purchase is made, it will also know the row the
 	// product is in
 	// the price and the type of product for purchase.
-	public boolean purchaseMade(String key) {
-		boolean vended = false;
-		//
-		if (data.checkStock(key) && data.getCurrentBalance() > data.getPrice(key)) {
-			data.decrimentStock(key);
-			// reduce currentBalance by price
-			data.setCurrentBalance(-data.getPrice(key));
-			// update this.income, we will update the current balance of the vending machine
-			data.deposits.add(data.getPrice(key));
-			// print to log
-			vended = true;
-		}
-		return vended;
-	}
-	
-	private void launchVend() {
-		// If the current balance is greater than the price of the current selection
-		if (data.getCurrentBalance() > data.getPrice(data.getCurrentSelection())) {
-			//remind the user what they selected
-		System.out.println("You selected " + data.getCurrentSelection());
-			//tell them how much that costs
-		int cost = data.getPrice(data.getCurrentSelection());
-		System.out.println("That costs $" + cost/100 + "." + cost%100);
-		System.out.println("You had " + data.getCurrentBalanceAsString());
-		data.setCurrentBalance(-data.getPrice(data.getCurrentSelection()));
-		data.addDeposit(data.getPrice(data.getCurrentSelection()));
-		data.decrimentStock(data.getCurrentSelection());
-		//write to log
-		System.out.println("You now have " + data.getCurrentBalanceAsString());
-		System.out.println("CCA-CHUNK CLINK");
-		System.out.println(data.currentStockList.get(data.getCurrentSelection()).getDispenseAlert());
-		System.out.println("*******************");
-		System.out.println("*******************\n\n\n");
-		} else {
-			int stillOwed = data.getPrice(data.getCurrentSelection()) - data.getCurrentBalance();
-			String strStillOwed = "$" + stillOwed/100 + "." + stillOwed%100;
-			System.out.println("Please insert " + strStillOwed);
-			launchFeed();
-		}
-	}
+//	public boolean purchaseMade(String key) {
+//		boolean vended = false;
+//		//
+//		if (data.checkStock(key) && data.getCurrentBalance() > data.getPrice(key)) {
+//			data.decrimentStock(key);
+//			// reduce currentBalance by price
+//			data.setCurrentBalance(-data.getPrice(key));
+//			// update this.income, we will update the current balance of the vending machine
+//			data.deposits.add(data.getPrice(key));
+//			// print to log
+//			vended = true;
+//		}
+//		return vended;
+//	}
 
-	private void launchCancel() {
+	private void launchFinishTransaction() {
 		
 		getChange();
 		
@@ -186,8 +219,10 @@ public class Machine {
 		if (input == 100 || input == 200 || input == 500 || input == 1000 || input == 2000) {
 			data.setCurrentBalance(input);
 			System.out.println("You entered $" + stringInput);
+			data.logFeed(input, data.getCurrentBalance());
 		} else {
 		System.out.println("That didn't work");
+		data.logFeedFailure(input, data.getCurrentBalance());
 		}
 	}
 

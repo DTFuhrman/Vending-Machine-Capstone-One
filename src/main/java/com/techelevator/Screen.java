@@ -31,12 +31,10 @@ public class Screen {
 	// It could be extended later to create a secret admin mode to
 	// See all the hidden menus and access extra functionality.
 	// I know old vending machines had that.
-	public void pauseScrolling() {
+	public String pauseScrolling() {
 		System.out.println("Press enter to continue");
 		String userInput = getInput();
-		if (userInput.toUpperCase().contains("Q")) {
-			System.exit(1);
-		}
+		return userInput;
 	}
 
 	//All this does is format the current balance to display it to the user

@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -24,16 +25,21 @@ public class Memory {
 		this.initialStockFile = getFile(path);
 		// set currentStockList
 		this.currentStockList = (initializeStock(initialStockFile));
-		this.currentStockPath = getDateForFileNames() + "CurrentStock.txt";
+//We could extend this to have persistent stock memory if we made functions similar to our log writing unctions
+		// this.currentStockPath = getDateForFileNames() + "CurrentStock.txt";
+
 		// SECURITY LOG ***
-		this.currentLogPath = "log.txt";
-		this.currentLogFile = newFile(initialStockPath);
+		this.logPath = "log.txt";
+		this.logFile = newFile(logPath);
+
 		// SALES ***
-		this.salesPath = "sales-for-" + getDateForFileNames() + "report.txt";
-		this.salesReport = newFile(initialStockPath);
+//		this.salesPath = "sales-for-" + getDateForFileNames() + "report.txt";
+//		this.salesReport = newFile(initialStockPath);
+
 		// Balance and Deposits
 		this.currentBalance = 0;
 		this.currentSelection = "A1";
+		logStartup();
 	}
 
 	//// Menus **** List<object>
@@ -50,7 +56,7 @@ public class Memory {
 			"(2)  Enter Purchase Menu", "(3)  Exit", "h(4)  Sales Report Menu", "h(5)  Order Report Menu" };
 //		Purchase Menu
 	private final String[] PURCHASE_MENU = new String[] { "h(0)", "(1)  Feed Money", "(2)  Select Item",
-			"(3)  Finish Transaction", "(4)  Cancel Transaction" };
+			"(3)  Finish Transaction" };
 //		Log Menu
 	private final String[] LOG_MENU = new String[] { "h(0)", "(1)  View Security Log", "(2) Back to Main Menu" };
 //		Sales Report Menu
@@ -70,15 +76,13 @@ public class Memory {
 //		Current Stock		/ Get / 
 	protected Map<String, VendItem> currentStockList;
 //		Current Stock File 	/(print to/write file)
-	private String currentStockPath;
-	private File currentStockFile;
+//	private String currentStockPath;
+//	private File currentStockFile;
 
 	//// Log ***************************** LOG
 //		current log being written; FILE
-	private List<String> currentLogList = new ArrayList<String>();
-	private List<String> HistoricalLogList = new ArrayList<String>();
-	private String currentLogPath;
-	private File currentLogFile;
+	private String logPath;
+	private File logFile;
 
 	//// Sales Report ***************************** Sales
 //		current report being written; FILE
@@ -131,7 +135,7 @@ public class Memory {
 	public void addDeposit(int amount) {
 		deposits.add(amount);
 	}
-	
+
 	public boolean checkStock(String key) {
 		boolean hasItem = false;
 		if (currentStockList.get(key).getNumberAvailable() > 0) {
@@ -161,47 +165,72 @@ public class Memory {
 	public String getCurrentSelection() {
 		return this.currentSelection;
 	}
-	
 
 	// fixme fixme fixme fixme fixme fixme fixme fixme fixme fixme fixme
 	// this will track the log of purchases
 	// what was purchased, the date, and the time, also what bill was used for
 	// purchase.
-	private String getDateForFileNames() {
-		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyy/MM/dd-HH:mm-");
+	private String getDateForLog() {
+		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MM/dd/yyy HH:mm:ss a ");
 		LocalDateTime now = LocalDateTime.now();
 		String dateTime = dtf.format(now);
 		return dateTime;
 	}
-	
-	
+
 	//// LOG WRITING AND READING WILL GO HERE
-	// this will print to the file the report for sales of products
-	public void printToLogList(Collection<String> collection) {
-		
-		 {
+	// this will print input into a log list
+	public void appendToLog(String input) {
+		try (FileWriter logWriter = new FileWriter(logFile)) {
 			
+			logWriter.append(input);
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		
-		
-		
 	}
 	
-	// this will print to the file the report for sales of products
-	public void recordLogFile(File logDestination) {
-		
-		
-		
-		
+	
+	///LOG METHODS
+	public void logStartup() {
+		// newest entry in last
+		appendToLog(">" + getDateForLog() + "POWER ON: VendoMatic8000 on");
+	}
+
+	public void logShutDown() {
+		// newest entry in last
+		appendToLog(">" + getDateForLog() + "POWER OFF: VendoMatic8000 off");
+	}
+
+	public void logFeed(int fed, int current) {
+		// newest entry in last
+		appendToLog(">" + getDateForLog() + "FEED MONEY: $" + fed/100 + "." + fed%100 + " $" 
+				+ current/100 + "." + current%100 + " ");
 	}
 	
-
-	public File generateSalesReport() {
-		File report = new File(getDateForFileNames() + " - Sales Report");
-
-		return report;
+	public void logFeedFailure(int fed, int current) {
+		// newest entry in last
+		appendToLog(">" + getDateForLog() + "FEED MONEY: failed to feed $" + fed/100 + "." + fed%100 + " $" 
+				+ current/100 + "." + current%100 + " ");
 	}
-
+	
+	public void logPurchase(String slot, String name, int balanceBeforeSale, int afterSale) {
+		appendToLog(">" + getDateForLog() + "SALE: " + name + " " + slot + balanceBeforeSale/100 
+				+ "." + balanceBeforeSale%100 + " $" + afterSale/100 + "." + afterSale%100 + " ");
+	}
+	
+	public void logChange(int changeGiven) {
+		appendToLog(">" + getDateForLog() + "GIVE CHANGE: $" + changeGiven/100 + "." 
+				+ changeGiven%100 + " " + this.currentBalance + " ");
+	}
+	
+	
+	
+//	public File generateSalesReport() {
+//		File report = new File(getDateForFileNames() + " - Sales Report");
+//
+//		return report;
+//	}
 
 	/// FROM STOCK!!! *****************************
 
@@ -242,17 +271,21 @@ public class Memory {
 		return fileToRead;
 	}
 
-
-
 	public File newFile(String path) {
 
 		File fileToRead = new File(path);
-		if (fileToRead.exists()) {
+		if (!fileToRead.exists()) {
+			try {
+				fileToRead.createNewFile();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		if (!fileToRead.isFile()) {// checks to make sure it's not a directory
 			System.out.println(path + " is actually not a file");
 			// call UX to handle this and ask again
 			System.exit(1);
-		}
 		}
 
 		return fileToRead;
@@ -260,33 +293,33 @@ public class Memory {
 
 	// This helper method fills the machine when it initializes
 	// it is only called by the constructor, so it is private
-	public  Map<String, VendItem> initializeStock(File initialStockFile) {
+	public Map<String, VendItem> initializeStock(File initialStockFile) {
 		Map<String, VendItem> stockList = new TreeMap<String, VendItem>();
 		try (Scanner initialStockReader = new Scanner(initialStockFile)) {
-				while (initialStockReader.hasNext()) {
-					String line = initialStockReader.nextLine();
-					String[] tempItemDetails = line.split("\\|");
-					String priceString = tempItemDetails[2];
-					Double priceDoublePennies = Double.parseDouble(priceString);
-					priceDoublePennies *= 100;
-					int price = priceDoublePennies.intValue();
-					VendItem newItem;
-					if (tempItemDetails[3].toUpperCase().contains("DR")) {
-						newItem = new RowOfBeverage(tempItemDetails[1], price);
-					} else if (tempItemDetails[3].toUpperCase().contains("CH")) {
-						newItem = new RowOfChips(tempItemDetails[1], price);
-					} else if (tempItemDetails[3].toUpperCase().contains("G")) {
-						newItem = new RowOfGum(tempItemDetails[1], price);
-					} else {
-						newItem = new RowOfCandy(tempItemDetails[1], price);
-					}
-					stockList.put(tempItemDetails[0], newItem);
+			while (initialStockReader.hasNext()) {
+				String line = initialStockReader.nextLine();
+				String[] tempItemDetails = line.split("\\|");
+				String priceString = tempItemDetails[2];
+				Double priceDoublePennies = Double.parseDouble(priceString);
+				priceDoublePennies *= 100;
+				int price = priceDoublePennies.intValue();
+				VendItem newItem;
+				if (tempItemDetails[3].toUpperCase().contains("DR")) {
+					newItem = new RowOfBeverage(tempItemDetails[1], price);
+				} else if (tempItemDetails[3].toUpperCase().contains("CH")) {
+					newItem = new RowOfChips(tempItemDetails[1], price);
+				} else if (tempItemDetails[3].toUpperCase().contains("G")) {
+					newItem = new RowOfGum(tempItemDetails[1], price);
+				} else {
+					newItem = new RowOfCandy(tempItemDetails[1], price);
 				}
-			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				stockList.put(tempItemDetails[0], newItem);
 			}
-		
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 		return stockList;
 	}
 

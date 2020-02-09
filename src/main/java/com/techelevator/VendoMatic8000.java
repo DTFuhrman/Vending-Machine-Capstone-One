@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.Scanner;
 import java.util.TreeMap;
 
-public class MVC {
+public class VendoMatic8000 {
 
 	
 	//our control flow works because of a system of launchers in our controller class
