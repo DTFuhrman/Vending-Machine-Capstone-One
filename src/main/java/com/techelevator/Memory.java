@@ -8,16 +8,17 @@ import java.io.PrintWriter;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.TreeMap;
 
-public class Data {
+public class Memory {
 
 //	Constructor
 
-	public Data(String path) {
+	public Memory(String path) {
 		// STOCK ***
 		this.initialStockPath = path;
 		this.initialStockFile = getFile(path);
@@ -74,14 +75,12 @@ public class Data {
 
 	//// Log ***************************** LOG
 //		current log being written; FILE
-	private List<String> logList = new ArrayList<String>();
+	private List<String> currentLogList = new ArrayList<String>();
+	private List<String> HistoricalLogList = new ArrayList<String>();
 	private String currentLogPath;
 	private File currentLogFile;
-//		most recent log
-	private String lastLogPath;
-	private File lastLog;
 
-	//// Sales Report ***************************** LOG
+	//// Sales Report ***************************** Sales
 //		current report being written; FILE
 	private List<String> salesList = new ArrayList<String>();
 	protected List<Integer> deposits = new ArrayList<Integer>();
@@ -129,6 +128,10 @@ public class Data {
 		this.currentBalance += amount;
 	}
 
+	public void addDeposit(int amount) {
+		deposits.add(amount);
+	}
+	
 	public boolean checkStock(String key) {
 		boolean hasItem = false;
 		if (currentStockList.get(key).getNumberAvailable() > 0) {
@@ -170,6 +173,28 @@ public class Data {
 		String dateTime = dtf.format(now);
 		return dateTime;
 	}
+	
+	
+	//// LOG WRITING AND READING WILL GO HERE
+	// this will print to the file the report for sales of products
+	public void printToLogList(Collection<String> collection) {
+		
+		 {
+			
+		}
+		
+		
+		
+	}
+	
+	// this will print to the file the report for sales of products
+	public void recordLogFile(File logDestination) {
+		
+		
+		
+		
+	}
+	
 
 	public File generateSalesReport() {
 		File report = new File(getDateForFileNames() + " - Sales Report");
@@ -177,10 +202,6 @@ public class Data {
 		return report;
 	}
 
-	// this will print to the file the report for sales of products
-	public void printToLog(String output) {
-
-	}
 
 	/// FROM STOCK!!! *****************************
 
@@ -221,14 +242,17 @@ public class Data {
 		return fileToRead;
 	}
 
+
+
 	public File newFile(String path) {
 
 		File fileToRead = new File(path);
-
+		if (fileToRead.exists()) {
 		if (!fileToRead.isFile()) {// checks to make sure it's not a directory
 			System.out.println(path + " is actually not a file");
 			// call UX to handle this and ask again
 			System.exit(1);
+		}
 		}
 
 		return fileToRead;

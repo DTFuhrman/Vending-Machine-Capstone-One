@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
-public class Interface {
+public class Screen {
 
 	// This is a very simple class with a scanner and some methods
 	// for getting user input through the keyboard and printing information

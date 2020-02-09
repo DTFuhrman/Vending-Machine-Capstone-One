@@ -2,14 +2,14 @@ package com.techelevator;
 
 import java.util.Map;
 
-public class Controller {
+public class Machine {
 
-	private Data data;
-	private Interface ux;
+	private Memory data;
+	private Screen ux;
 	
-	public Controller(String path) {
-		data = new Data(path);
-		ux = new Interface();
+	public Machine(String path) {
+		data = new Memory(path);
+		ux = new Screen();
 	}
 
 	// check this
@@ -40,24 +40,6 @@ public class Controller {
 		return change;
 	}
 
-	// this is checking the current stock for the items in the vending machine.
-	// this will update once a purchase is made, it will also know the row the
-	// product is in
-	// the price and the type of product for purchase.
-	public boolean purchaseMade(String key) {
-		boolean vended = false;
-		//
-		if (data.checkStock(key) && data.getCurrentBalance() > data.getPrice(key)) {
-			data.decrimentStock(key);
-			// reduce currentBalance by price
-			data.setCurrentBalance(-data.getPrice(key));
-			// update this.income, we will update the current balance of the vending machine
-			data.deposits.add(data.getPrice(key));
-			// print to log
-			vended = true;
-		}
-		return vended;
-	}
 
 	// this will accept the valid bills entered into the machine, we are counting
 	// with pennies.
@@ -100,6 +82,8 @@ public class Controller {
 	private void launchPurchase() {
 		while (true) {
 			ux.printMenu(data.getMenu(2));
+			System.out.println(">>>>>>>>>>>>>");
+			ux.printCurrentBalance(data.getCurrentBalance());
 			String purchaseInput = ux.getInput();
 			if (purchaseInput.contains("1")) {
 				launchFeed();
@@ -139,15 +123,43 @@ public class Controller {
 		}
 	}
 
+	// this is checking the current stock for the items in the vending machine.
+	// this will update once a purchase is made, it will also know the row the
+	// product is in
+	// the price and the type of product for purchase.
+	public boolean purchaseMade(String key) {
+		boolean vended = false;
+		//
+		if (data.checkStock(key) && data.getCurrentBalance() > data.getPrice(key)) {
+			data.decrimentStock(key);
+			// reduce currentBalance by price
+			data.setCurrentBalance(-data.getPrice(key));
+			// update this.income, we will update the current balance of the vending machine
+			data.deposits.add(data.getPrice(key));
+			// print to log
+			vended = true;
+		}
+		return vended;
+	}
+	
 	private void launchVend() {
+		// If the current balance is greater than the price of the current selection
 		if (data.getCurrentBalance() > data.getPrice(data.getCurrentSelection())) {
+			//remind the user what they selected
 		System.out.println("You selected " + data.getCurrentSelection());
-		System.out.println("That costs " + data.getPrice(data.getCurrentSelection()));
+			//tell them how much that costs
+		int cost = data.getPrice(data.getCurrentSelection());
+		System.out.println("That costs $" + cost/100 + "." + cost%100);
 		System.out.println("You had " + data.getCurrentBalanceAsString());
 		data.setCurrentBalance(-data.getPrice(data.getCurrentSelection()));
+		data.addDeposit(data.getPrice(data.getCurrentSelection()));
+		data.decrimentStock(data.getCurrentSelection());
+		//write to log
 		System.out.println("You now have " + data.getCurrentBalanceAsString());
 		System.out.println("CCA-CHUNK CLINK");
 		System.out.println(data.currentStockList.get(data.getCurrentSelection()).getDispenseAlert());
+		System.out.println("*******************");
+		System.out.println("*******************\n\n\n");
 		} else {
 			int stillOwed = data.getPrice(data.getCurrentSelection()) - data.getCurrentBalance();
 			String strStillOwed = "$" + stillOwed/100 + "." + stillOwed%100;
