@@ -121,8 +121,8 @@ public class Machine {
 			System.out.println("Make your selection, or (cancel)");
 			//record their input in uppercase
 			String selection = ux.getInput().toUpperCase();
-			//if the slot number exists AND the their selection is available in the actual stock
-			if (items.containsKey(selection) && data.currentStockList.get(selection).getNumberAvailable() > 0) {
+			//if the slot number exists AND the their selection is available
+			if (items.containsKey(selection) && items.get(selection).getNumberAvailable() > 0) {
 				//then set the current selection as that key
 				data.setCurrentSelection(selection);
 				//let the user know what they selected
@@ -137,7 +137,7 @@ public class Machine {
 					//tell them how much they had
 				System.out.println("You had " + data.getCurrentBalanceAsString());
 				//log the purchase
-				data.logPurchase(data.getCurrentSelection(), data.currentStockList.get(data.getCurrentSelection()).getName(), data.getCurrentBalance(), data.getCurrentBalance()-cost);
+				data.logPurchase(data.getCurrentSelection(), items.get(data.getCurrentSelection()).getName(), data.getCurrentBalance(), data.getCurrentBalance()-cost);
 				//subtract cost of item from current balance
 				data.setCurrentBalance(-data.getPrice(data.getCurrentSelection()));
 				//record the money in deposits
@@ -149,7 +149,7 @@ public class Machine {
 				//vend the item
 				System.out.println("*******************");
 				System.out.println("CCA-CHUNK CLINK");
-				System.out.println(data.currentStockList.get(data.getCurrentSelection()).getDispenseAlert());
+				System.out.println(items.get(data.getCurrentSelection()).getDispenseAlert());
 				System.out.println("*******************");
 				System.out.println("*******************\n\n\n");
 				//let them enjoy their purchase before returning them to the top of the selection menu
@@ -182,29 +182,11 @@ public class Machine {
 		}
 	}
 
-	// this is checking the current stock for the items in the vending machine.
-	// this will update once a purchase is made, it will also know the row the
-	// product is in
-	// the price and the type of product for purchase.
-//	public boolean purchaseMade(String key) {
-//		boolean vended = false;
-//		//
-//		if (data.checkStock(key) && data.getCurrentBalance() > data.getPrice(key)) {
-//			data.decrimentStock(key);
-//			// reduce currentBalance by price
-//			data.setCurrentBalance(-data.getPrice(key));
-//			// update this.income, we will update the current balance of the vending machine
-//			data.deposits.add(data.getPrice(key));
-//			// print to log
-//			vended = true;
-//		}
-//		return vended;
-//	}
 
 	private void launchFinishTransaction() {
-		
-		getChange();
-		
+		if (data.getCurrentBalance() > 0){
+			getChange();
+		}
 		System.out.println("Returning To Main Menu");
 		ux.pauseScrolling();
 		launchMain();

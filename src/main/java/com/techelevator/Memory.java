@@ -16,34 +16,60 @@ import java.util.Scanner;
 import java.util.TreeMap;
 
 public class Memory {
+	
+// Memory
+	// This class holds almost all of the real data objects in our program.
+	// including the stock objects and the list of the stock, and the text 
+	// to display in the menues and everything.
+	// In retrospect it might have made sense to seperate this out a bit more
+	// into a File reading and writing class and a data class.
 
-//	Constructor
-
+//	CONSTRUCTOR
+	// Our constructor takes a path to pull the inventory
+	// it still needs to be hard coded at some point, but 
+	// it makes it more extensible I think because it could be 
+	// programmed to launch from a terminal with a path 
+	// so you could access different stocks.
 	public Memory(String path) {
-		// STOCK ***
+		// STOCK *** This initializes our stock when it is first instantiated
+		// It makes sure the stock file exists, instantiates objects for each row
+		// and sets the number available to five
 		this.initialStockPath = path;
 		this.initialStockFile = getFile(path);
-		// set currentStockList
 		this.currentStockList = (initializeStock(initialStockFile));
-//We could extend this to have persistent stock memory if we made functions similar to our log writing unctions
-		// this.currentStockPath = getDateForFileNames() + "CurrentStock.txt";
+		//POTENTIAL EXTENSIBIITY: We could have persistent stock memory 
+		//if we made functions similar to our log writing functions
 
-		// SECURITY LOG ***
+		// SECURITY LOG STUFF *** This instantiates our log file
+		// it automatically checks if one exists and creates one if it doesn't
+		//
 		this.logPath = "log.txt";
 		this.logFile = newFile(logPath);
 
-		// SALES ***
-//		this.salesPath = "sales-for-" + getDateForFileNames() + "report.txt";
-//		this.salesReport = newFile(initialStockPath);
+		// SALES *** 
+		//POTENTIAL EXTENSIBILITY: We have not yet implemented the Sales log function, 
+		//but we have some ideas for it.
+//		this.salesPath; 
+//		this.salesReport
 
-		// Balance and Deposits
-		this.currentBalance = 0;
+		// BALANCE and CURRENT SELECTION This Initializes the current balance to zero
+		// and the current selection to A1 to avoid any null pointint if something breaks.
+		this.currentBalance = 000;
 		this.currentSelection = "A1";
+		// This appends a log entry to our log file every time the machine instantiates
 		logStartup();
 	}
 
-	//// Menus **** List<object>
-//		Front Menu
+	//// MENUS **********
+	//// These arrays contain the text for the menu printer
+	//// This uses less memory than a list and loads faster (I think)
+	//// We made them final because they will never change during runtime.
+	//// The list printer doesn't display menu selections that start with h.
+//		WELCOME SCREEN - This welcome screen boxes in the functionality.
+	// This way when you quit the menus it doesn't turn all the way off.
+	// You can quit from this screen if you enter q or Q or quit oor something.
+	// EXTENSIBILITY: This menu could also allow you to enter a secret admin mode
+	// to display the hidden menus and give you permission to enter the report menus.
 	private final String[] WELCOME_SCREEN = new String[] { "[VENDOMATIC-8000]$$$$$$$$$$$$$$$",
 			"$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$", "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$", "$$                            $$",
 			"$$         Welcome to         $$", "$$       VendoMatic-8000      $$", "$$        Press (enter)       $$",
@@ -51,91 +77,110 @@ public class Memory {
 			"$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$", "$$                            $$", "$$    awaiting user input     $$",
 			"$$                            $$", "$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$",
 			"$$$$$$$$$$$$$$$$$[TECH$ELEVATOR]", };
-//		Main menu
+//		Main menu - this is our main menu.
+	//POTENTIAL EXTENSIBILITY: We added hidden menus for menus that could deal with extra extensibility in the future.
 	private final String[] MAIN_MENU = new String[] { "h(0) Security Log Menu", "(1)  Display Vending Machine Items",
 			"(2)  Enter Purchase Menu", "(3)  Exit", "h(4)  Sales Report Menu", "h(5)  Order Report Menu" };
-//		Purchase Menu
+//		Purchase Menu - This is our purchase menu.
 	private final String[] PURCHASE_MENU = new String[] { "h(0)", "(1)  Feed Money", "(2)  Select Item",
 			"(3)  Finish Transaction" };
-//		Log Menu
+//		Log Menu - POTENTIAL EXTENSIBILITY: This menu could be implemented to give admins access to extra functions 
 	private final String[] LOG_MENU = new String[] { "h(0)", "(1)  View Security Log", "(2) Back to Main Menu" };
-//		Sales Report Menu
+//		Sales Report Menu - POTENTIAL EXTENSIBILITY: This menu could be implemented to give admins access to extra functions
 	private final String[] REPORT_MENU = new String[] { "h(0)", "(1)  Write new Report File", "(2)  View Report",
 			"(3)  Back To Main Menu" };
-//		Vendor Order Menu
+//		Vendor Order Menu - POTENTIAL EXTENSIBILITY: This menu could be implemented to give admins access to extra functions
 	private final String[] ORDER_MENU = new String[] { "h(0)", "UPCOMING FUNCIONTALITY!",
 			"(any key)  Back to Main Menu" };
-//		array of menus
+//		Array of menus - We store each of our menus in a private array for our printer to access them easily.
 	private final String[][] menus = new String[][] { WELCOME_SCREEN, MAIN_MENU, PURCHASE_MENU, LOG_MENU, REPORT_MENU,
 			ORDER_MENU };
 
-	//// Stock **** Files ***OR*** Maps <key:String, value:VendItem>
-//		Initial Stock File	/ load
+	//// Stock *********** This is where we store our stock in our map
+			//It's also where we keep our stock file path and our stock file object
 	private String initialStockPath;
 	private File initialStockFile;
 //		Current Stock		/ Get / 
-	protected Map<String, VendItem> currentStockList;
-//		Current Stock File 	/(print to/write file)
+	private Map<String, VendItem> currentStockList;
+//		Current Stock File 	 - POTENTIAL EXTENSIBILITY: If we wanted to make a persistant stock
+													//we would implement that here
 //	private String currentStockPath;
 //	private File currentStockFile;
+	
+	// [POTENTIAL EXTENSIBILITY!] We were thinking it would 
+		// not be too hard to print 
+		// our current inventory to a file to create persistent 
+		// memory instead of initializing to the same state 
+		// every time it's turned on.
 
 	//// Log ***************************** LOG
-//		current log being written; FILE
+//		This is our log path and log file
 	private String logPath;
 	private File logFile;
 
 	//// Sales Report ***************************** Sales
-//		current report being written; FILE
-	private List<String> salesList = new ArrayList<String>();
-	protected List<Integer> deposits = new ArrayList<Integer>();
-	private String salesPath;
-	private File salesReport;
-//		most recent log
+//		 - POTENTIAL EXTENSIBILITY: If we were to implement a
+					// sales report functionality we would start by 
+					// making a list to store our sales in the right format
+					// we already store deposits as cents in integer form,
+					// but we would also need to track the date and time and 
+					// some other stuff. This would be our file and our path
+					// We would probably autogenerate a new path with the date 
+					// and time each time the machine turned on.
+	// private List<String> salesList = new ArrayList<String>();
+	private List<Integer> deposits = new ArrayList<Integer>();
+	// private String salesPath;
+	// private File salesReport;
 
-	//// Money ***************************** Current State STUFF
-//	Income Bank  		/ Get(Sale report)
-//  current balance
+	//// MONEY AND CURRENT STATE STUFF
+	// this is our current balance when money has been fed but not
+	// spent or returned as change yet
+	// we store all money as cents in integer form and reformat it for display to the user
+	// This avoids rounding errors UNLESS DIVISION BECOMES NECESSARY
+	// We would have to work around this if sales became a thing
+	// The trade off is also that we can't have really big numbers, 
+	// but if we are ever dealing with 2.1 billion cents it's probably already a problem.
 	private int currentBalance;
+	// We store our current selection here, so we can reference it when we need to look 
+	// at what has been selected.
 	private String currentSelection;
 
-//	//// Scanners *************************************** SCANNERS
-////		initial stock reader
-//	public Scanner initialStockReader; // = new Scanner(initialStockPath);
-////		current stock reader
-//	public PrintWriter initialStockPrinter; // = new PrintWriter(initialStockPath);
-////		current stock reader
-//	public Scanner currentStockReader; // = new Scanner(currentStockPath);
-////		current stock printer
-//	public PrintWriter currentStockPrinter; // = new PrintWriter(currentStockPath);
-////		current stock file writer
-//	public FileWriter currentStockFileWriter; // = new FileWriter(currentStockPath);
-////		log reader
-//	public Scanner logReader; // = new Scanner(currentLogPath);
-////		log printer
-//	public PrintWriter logPrinter; // = new PrintWriter(currentLogPath);
-////		log file writer
-//	public FileWriter logFileWriter; // = new FileWriter(currentLogPath);
 
-//	Helper METHODS***********************
+//// METHODS!!! ******************************
 
 //	 GETTERS/SETTERS *********************
+	// All of these methods are to access or alter data
+	// all of our data is private, so these functions are necessary
+	// this also stop unexpected behavior like the ability to change
+	// current balance without using the feed bill method
 
+	//this menu decreases the amount of code necessary to call a menu
+	// and makes them accessible despite being private
 	public String[] getMenu(int menuIndex) {
 		return menus[menuIndex];
 	}
 
+	//normal getter for curent balance
 	public int getCurrentBalance() {
 		return this.currentBalance;
 	}
 
+	//This changes the current baance, but you can't set it like a normal setter
+	//You can only add to it or subtract from it with negative numbers It's only 
+	//accessible by feeding bills, making purchases, or getting change.
+	// I made it protected because it seems sensitive
 	protected void setCurrentBalance(int amount) {
 		this.currentBalance += amount;
 	}
 
+	// This function tracks all of the money that is spent in the machine
+	// by storing the income from each purchase in our deposit list
 	public void addDeposit(int amount) {
 		deposits.add(amount);
 	}
 
+	
+	//This returns a boolean reflecting whether we are out of an item or not
 	public boolean checkStock(String key) {
 		boolean hasItem = false;
 		if (currentStockList.get(key).getNumberAvailable() > 0) {
@@ -144,154 +189,49 @@ public class Memory {
 		return hasItem;
 	}
 
+	
+	//This gets the price of an item if you have it's key
 	public int getPrice(String key) {
 		int price = currentStockList.get(key).getPriceInCents();
 		return price;
 	}
 
+	//This decreases the stock by one when an item is purchased
 	public void decrimentStock(String key) {
 		currentStockList.get(key).decrimentNumber();
 	}
 
 //	TO STRINGS
+	//This returns the current balance as a string
+	//In retrospect it would have been more useful if we made
+	// a more general function to convert ints representing 
+	// cents into display strings
 	public String getCurrentBalanceAsString() {
 		return "$" + Integer.toString(this.currentBalance / 100) + "." + Integer.toString(this.currentBalance % 100);
 	}
 
+	//This changes the current selection for purchase
 	public void setCurrentSelection(String input) {
 		this.currentSelection = input;
 	}
 
+	//This gets the current key selected in the selection menu
 	public String getCurrentSelection() {
 		return this.currentSelection;
 	}
 
-	// fixme fixme fixme fixme fixme fixme fixme fixme fixme fixme fixme
-	// this will track the log of purchases
-	// what was purchased, the date, and the time, also what bill was used for
-	// purchase.
-	private String getDateForLog() {
-		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MM/dd/yyy HH:mm:ss a ");
-		LocalDateTime now = LocalDateTime.now();
-		String dateTime = dtf.format(now);
-		return dateTime;
-	}
-
-	//// LOG WRITING AND READING WILL GO HERE
-	// this will print input into a log list
-	public void appendToLog(String input) {
-		try (FileWriter logWriter = new FileWriter(logFile, true)) {
-			
-			logWriter.append(input);
-			
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
 	
-	
-	///LOG METHODS
-	public void logStartup() {
-		// newest entry in last
-		appendToLog(">" + getDateForLog() + "POWER ON: VendoMatic8000 on");
-	}
-
-	public void logShutDown() {
-		// newest entry in last
-		appendToLog(">" + getDateForLog() + "POWER OFF: VendoMatic8000 off");
-	}
-
-	public void logFeed(int fed, int current) {
-		// newest entry in last
-		appendToLog(">" + getDateForLog() + "FEED MONEY: $" + fed/100 + "." + fed%100 + " $" 
-				+ current/100 + "." + current%100 + " ");
-	}
-	
-	public void logFeedFailure(int fed, int current) {
-		// newest entry in last
-		appendToLog(">" + getDateForLog() + "FEED MONEY: failed to feed $" + fed/100 + "." + fed%100 + " $" 
-				+ current/100 + "." + current%100 + " ");
-	}
-	
-	public void logPurchase(String slot, String name, int balanceBeforeSale, int afterSale) {
-		appendToLog(">" + getDateForLog() + "SALE: " + name + " " + slot + balanceBeforeSale/100 
-				+ "." + balanceBeforeSale%100 + " $" + afterSale/100 + "." + afterSale%100 + " ");
-	}
-	
-	public void logChange(int changeGiven) {
-		appendToLog(">" + getDateForLog() + "GIVE CHANGE: $" + changeGiven/100 + "." 
-				+ changeGiven%100 + " " + this.currentBalance + " ");
-	}
+	//************ HELPER METHODS ************
 	
 	
 	
-//	public File generateSalesReport() {
-//		File report = new File(getDateForFileNames() + " - Sales Report");
-//
-//		return report;
-//	}
 
-	/// FROM STOCK!!! *****************************
-
-	// We have a base stock file that represents the main inventory we load from
-	// We also have a map that keeps track of the slot location
-	// and the row object in that location
-
-	// This constructor will be called by the VendingMachine Class
-	// because each machine will have a stock, a cashier, and a UX
-	// The constructor fills the stock fully from the original file
-	// But it could be updated to track the stock through persistent memory by
-	// changing
-	// which file it reads from.
-//	public Stock(String path) {
-//		this.baseStock = getFile(path);
-//		getStock(this.baseStock);
-//	}
-
-	// this is a helper method to validate a path
-	// before we start pulling from it or writing to it
-	// right now it ensures the file exists
-	// but it can be ALTERED to throw a message if the file exists or expect the
-	// file to exist
-	public File getFile(String path) {
-
-		File fileToRead = new File(path);
-
-		if (!fileToRead.exists()) { // checks for the existence of a file
-			System.out.println(path + "... I can't find that file");
-			// call UX to handle this and ask again
-			System.exit(1);
-		} else if (!fileToRead.isFile()) {// checks to make sure it's not a directory
-			System.out.println(path + " is actually not a file");
-			// call UX to handle this and ask again
-			System.exit(1);
-		}
-
-		return fileToRead;
-	}
-
-	public File newFile(String path) {
-
-		File fileToRead = new File(path);
-		if (!fileToRead.exists()) {
-			try {
-				fileToRead.createNewFile();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		if (!fileToRead.isFile()) {// checks to make sure it's not a directory
-			System.out.println(path + " is actually not a file");
-			// call UX to handle this and ask again
-			System.exit(1);
-		}
-
-		return fileToRead;
-	}
-
-	// This helper method fills the machine when it initializes
+	// STOCK HELPERS!!!! *****************
+	
+	// This helper method initializes all the stock from the text file as objects
+	// it is called in the constructor, so every time it is made in memory, the stock will resent
+	// This COULD be altered to use a persistant stock from a txt file, or to call different stocks 
+	// depending on an initial selection.
 	// it is only called by the constructor, so it is private
 	public Map<String, VendItem> initializeStock(File initialStockFile) {
 		Map<String, VendItem> stockList = new TreeMap<String, VendItem>();
@@ -323,13 +263,136 @@ public class Memory {
 		return stockList;
 	}
 
-	// update stock if an item is sold
-
-	// this returns the details so we can display them
+		// This method creates a copy of the map so we can access it elsewhere,
+		// but it doesn't give anyone access to altering the stock outside the setters above
+		// because it's a copy (I think)
+		//
 	public Map<String, VendItem> getStockDetails() {
 		Map<String, VendItem> temp = new TreeMap<String, VendItem>();
 		temp.putAll(currentStockList);
 		return temp;
 	}
+
+	
+	// FILE I/O HELPERS **********
+	// this method validates a file path and ensures it exists before returning the file object
+	// This COULD write to the log file if it fails and shut the machine off
+	// Because we validate the file in this method, we won't get exceptions elsewhere.
+	// So we know where to look if one happens
+
+	public File getFile(String path) {
+
+		File fileToRead = new File(path);
+
+		if (!fileToRead.exists()) { // checks for the existence of a file
+			System.out.println(path + "... I can't find that file");
+			// call UX to handle this and ask again
+			System.exit(1);
+		} else if (!fileToRead.isFile()) {// checks to make sure it's not a directory
+			System.out.println(path + " is actually not a file");
+			// call UX to handle this and ask again
+			System.exit(1);
+		}
+
+		return fileToRead;
+	}
+
+	//Similar to above, this file ensures a file exists, but if it doesn't this method
+	//creates a new one. It will never overwrite, because it checks to see if it exists first.
+	public File newFile(String path) {
+
+		File fileToRead = new File(path);
+		if (!fileToRead.exists()) {
+			try {
+				fileToRead.createNewFile();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		if (!fileToRead.isFile()) {// checks to make sure it's not a directory
+			System.out.println(path + " is actually not a file");
+			// call UX to handle this and ask again
+			System.exit(1);
+		}
+
+		return fileToRead;
+	}
+	
+	
+	//// ************* LOG METHODS ***********
+	
+	//This function creates a date formatted for use in the log  
+	private String getDateForLog() {
+		DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MM/dd/yyy HH:mm:ss a ");
+		LocalDateTime now = LocalDateTime.now();
+		String dateTime = dtf.format(now);
+		return dateTime;
+	}
+
+	// This function simply appends to the log file
+	public void appendToLog(String input) {
+		try (FileWriter logWriter = new FileWriter(logFile, true)) {
+			
+			logWriter.append(input);
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	
+	///LOG METHODS - Each of these methods formats and prints a different kind of message to the log
+	// they are used by the machines functions that are performing actual functions so that the
+	// log entry is recorded when the behavior being logged occurs.
+	public void logStartup() {
+		// this logs when the machine is instantiated
+		appendToLog(">" + getDateForLog() + "POWER ON: VendoMatic8000 on");
+	}
+
+	public void logShutDown() {
+		// This logs when the machine shuts down if you quit properly
+		// (unless you just kill the processes with the red button)
+		appendToLog(">" + getDateForLog() + "POWER OFF: VendoMatic8000 off");
+	}
+
+	public void logFeed(int fed, int current) {
+		// This logs every time money is fed into the machine
+		appendToLog(">" + getDateForLog() + "FEED MONEY: $" + fed/100 + "." + fed%100 + " $" 
+				+ current/100 + "." + current%100 + " ");
+	}
+	
+	public void logFeedFailure(int fed, int current) {
+		// This logs every time someone attempts to feed money incorrectly
+		appendToLog(">" + getDateForLog() + "FEED MONEY: failed to feed $" + fed/100 + "." + fed%100 + " $" 
+				+ current/100 + "." + current%100 + " ");
+	}
+	
+		// This logs every time a purchase is succesful
+		// We COULD implement a log function to record purchases
+		// that are unsuccesfull as well and log the reason why 
+		// sold out/insufficient funds/invalid selection etc.
+	public void logPurchase(String slot, String name, int balanceBeforeSale, int afterSale) {
+		appendToLog(">" + getDateForLog() + "SALE: " + name + " " + slot + balanceBeforeSale/100 
+				+ "." + balanceBeforeSale%100 + " $" + afterSale/100 + "." + afterSale%100 + " ");
+	}
+	
+		// This logs every time change is given. we COULD record which coins were given too.
+	public void logChange(int changeGiven) {
+		appendToLog(">" + getDateForLog() + "GIVE CHANGE: $" + changeGiven/100 + "." 
+				+ changeGiven%100 + " " + this.currentBalance + " ");
+	}
+	
+	///// SALES REPORT FUNCTIONS!!!! ***********
+		//If we were going to implement sales report stuff we would do it here
+	
+//	public File generateSalesReport() {
+//		File report = new File(getDateForFileNames() + " - Sales Report");
+//
+//		return report;
+//	}
+
+	
 
 }

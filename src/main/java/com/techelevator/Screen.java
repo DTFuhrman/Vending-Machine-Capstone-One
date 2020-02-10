@@ -19,7 +19,9 @@ public class Screen {
 	public Scanner keyboard = new Scanner(System.in);
 
 	
-	//this helper function lets other classes use the scanner very quickly
+	// this helper function lets other classes use the scanner very quickly
+	// that way this class doesn't need to know anything about the data
+	// or the logic.
 	public String getInput() {
 		String output = keyboard.nextLine();
 		return output;
@@ -27,10 +29,6 @@ public class Screen {
 
 	// this helper function stops the menus from scrolling by too quickly
 	// by requiring the enter key be hit.
-	// it also gives a hidden exit from the program.
-	// It could be extended later to create a secret admin mode to
-	// See all the hidden menus and access extra functionality.
-	// I know old vending machines had that.
 	public String pauseScrolling() {
 		System.out.println("Press enter to continue");
 		String userInput = getInput();
@@ -38,11 +36,14 @@ public class Screen {
 	}
 
 	//All this does is format the current balance to display it to the user
+	//In retrospect we should have made a more general function to convert any int 
+	//that was a value in pennies into a string.
 	public void printCurrentBalance(int current) {
 		System.out.println(">>Current Money Provided: $" + current / 100 + "." + current % 100 + ">");
 	}
 	
-	//This method takes a menu, all of which we have stored in arrays of strings, and prints it to the console.
+	//This method takes a menu, all of which we have stored in arrays of strings,
+	// and prints it to the console.
 	public void printMenu(String[] menu) {
 		for (String str : menu) {
 			if (!str.startsWith("h")) {
@@ -54,10 +55,6 @@ public class Screen {
 	// This is the most complex method in this class. 
 	// It is designed to print out our CURRENT inventory,
 	// which is stored in a map.
-	// we were thinking it would not be too hard to print 
-	// our current inventory to a file to create persistant 
-	// memory instead of initializing to the same state 
-	// every time it's turned on.
 	public void printCurrentStock(Map<String, VendItem> stock) {
 		for (Map.Entry<String, VendItem> entry : stock.entrySet()) {
 			if (entry.getValue().getNumberAvailable() < 1) {
