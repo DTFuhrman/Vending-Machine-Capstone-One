@@ -6,10 +6,11 @@ public abstract class VendItem {
 	//Each row (in the z direction) will have a number of treats left
 	//the name of the product in the row
 	//the noise it makes when it vends
-	//and the price (stored in cents as an integer
+	//and the price (stored in cents as an integer)
 	private int numberOf;
 	private String productName;
 	//our alert is protected instead of private so we can set it in the child class
+	//we could have created a constructor for VendItem that sets this 
 	protected String alert;
 	private int priceInCents;
 	private String slotID;
@@ -61,6 +62,7 @@ public abstract class VendItem {
 		return this.priceInCents;
 	}
 
+	//We provided a toString override to make it easier to print out our stock
 	@Override
 	public String toString() {
 		return "We have " + numberOf + " of " + productName + " available for $" + priceInCents/100 + "." + priceInCents%100;
