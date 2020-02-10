@@ -254,6 +254,8 @@ public class Machine {
 				data.addDeposit(data.getPrice(data.getCurrentSelection()));
 				//decrease the number of the item available for sale
 				data.decrimentStock(data.getCurrentSelection());
+				//log the sale in the sales report
+				data.incrementSalesReport(items.get(data.getCurrentSelection()).getName());
 				//tell user their new balance
 				System.out.println("You now have " + data.getCurrentBalanceAsString());
 				//vend the item

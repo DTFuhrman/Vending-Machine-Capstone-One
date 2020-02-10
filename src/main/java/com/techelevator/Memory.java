@@ -51,6 +51,7 @@ public class Memory {
 		// but we have some ideas for it.
 		this.salesPath = "SalesReport.txt";
 		this.salesReport = newFile(salesPath);
+		initializeSalesReport();
 
 		// BALANCE and CURRENT SELECTION This Initializes the current balance to zero
 		// and the current selection to A1 to avoid any null pointint if something
@@ -456,7 +457,7 @@ public class Memory {
 			if (salesList.get(i).contains(itemName)) {
 				String[] parts = salesList.get(i).split("\\|");
 				int salesToDate = Integer.parseInt(parts[1]);
-				String newLine = parts[0] + "|" + salesToDate + 1;
+				String newLine = parts[0] + "|" + salesToDate + 1 + "\n";
 				salesList.set(i, newLine);
 				break;
 			}
@@ -464,7 +465,7 @@ public class Memory {
 		// read the total from the bottom
 
 		String previousTotalString = salesList.get(salesList.size() - 1);
-		previousTotalString = previousTotalString.replaceAll("[^9-0]", " ");
+		previousTotalString = previousTotalString.replaceAll("[^0-9]", "");
 		int previousTotal = Integer.parseInt(previousTotalString);
 		
 		// empty the file by overwriting it with a title and date and time stamp
