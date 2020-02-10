@@ -16,9 +16,9 @@ public class VendoMatic8000 {
 	//to keep it loosely coupled and organized.
 	public static void main(String[] args) {
 
-		Machine main = new Machine("vendingmachine.csv");
+		Machine vendo = new Machine("vendingmachine.csv");
 		while(true) {
-		main.launcher();
+		vendo.launcher();
 		}
 	}
 	
