@@ -304,33 +304,38 @@ public class Machine {
 		launchMain();
 	}
 
-	//
-	private void launchLog() {
-		while (true) {
-			ux.printMenu(data.getMenu(3));
-			String logInput = ux.getInput();
-			if (logInput.contains("1")) {
-
-			} else if (logInput.contains("2")) {
-
-			} else if (logInput.contains("3")) {
-
-			} else if (logInput.contains("4")) {
-
-			} else if (logInput.contains("0")) {
-
-			}
-		}
-	}
-
-	private void launchSale() {
-		ux.printMenu(data.getMenu(4));
-		String saleInput = ux.getInput();
-	}
-
-	private void LaunchOrder() {
-		ux.printMenu(data.getMenu(5));
-		String orderInput = ux.getInput();
-	}
+//	//This method would be used to access log functionality, 
+//	//but has not yet been implemented
+//	private void launchLog() {
+//		while (true) {
+//			ux.printMenu(data.getMenu(3));
+//			String logInput = ux.getInput();
+//			if (logInput.contains("1")) {
+//
+//			} else if (logInput.contains("2")) {
+//
+//			} else if (logInput.contains("3")) {
+//
+//			} else if (logInput.contains("4")) {
+//
+//			} else if (logInput.contains("0")) {
+//
+//			}
+//		}
+//	}
+//
+//	//This method would be used to access sales report functionality, 
+//	//but has not yet been implemented
+//	private void launchSale() {
+//		ux.printMenu(data.getMenu(4));
+//		String saleInput = ux.getInput();
+//	}
+//
+//	//This method would be used to access vendor order functionality, 
+//	//but has not yet been implemented
+//	private void LaunchOrder() {
+//		ux.printMenu(data.getMenu(5));
+//		String orderInput = ux.getInput();
+//	}
 
 }
