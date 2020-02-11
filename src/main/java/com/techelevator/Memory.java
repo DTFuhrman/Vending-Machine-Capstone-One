@@ -463,23 +463,28 @@ public class Memory {
 			}
 		}
 		// read the total from the bottom
-
 		String previousTotalString = salesList.get(salesList.size() - 1);
 		previousTotalString = previousTotalString.replaceAll("[^0-9]", "");
 		int previousTotal = Integer.parseInt(previousTotalString);
 		
-		// empty the file by overwriting it with a title and date and time stamp
-		try (FileWriter overWriteWithNewHeading = new FileWriter(salesReport)) {
-			overWriteWithNewHeading.append("New Sales Report Generated: " + getDateForReport() + "\n\n\n");
-		} catch (Exception e2) {
-			// TODO Auto-generated catch block
-			e2.printStackTrace();
-		}
+		// empty the file
+		salesReport.delete();
+		
+		// by overwriting it with a title and date and time stamp
+		salesReport = newFile(salesPath);
+		
+//		try (FileWriter overWriteWithNewHeading = new FileWriter(salesReport, false)) {
+//			overWriteWithNewHeading.append("New Sales Report Generated: " + getDateForReport() + "\n\n\n");
+//		} catch (Exception e2) {
+//			// TODO Auto-generated catch block
+//			e2.printStackTrace();
+//		}
 		
 		// rewrite the file line by line
 		for (String str : salesList) {
-			writeToSalesReport(str);
+			writeToSalesReport(str + "\n");
 		}
+		
 		// record the total revenue
 		int newPennies = 0;
 		newPennies += previousTotal;
@@ -493,6 +498,9 @@ public class Memory {
 		for(String entry: salesList) {
 			writeToSalesReport(entry);
 		}
+		
+		String newTotal = "\n\n\t\tTotal: $" + newPennies/100 + "." + newPennies%100;
+		writeToSalesReport(newTotal);
 		
 		//empty the sales list
 		salesList.removeAll(salesList);

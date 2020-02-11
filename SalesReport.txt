@@ -1,4 +1,5 @@
-Potato Crisps|0
+Potato Crisps|01
+
 Stackers|0
 Grain Waves|0
 Cloud Popcorn|0
@@ -17,3 +18,7 @@ Triplemint|0
 
 
 		Total: $00.00
+Potato Crisps|01
+Stackers|0Grain Waves|0Cloud Popcorn|0Moonpie|0Cowtales|0Wonka Bar|0Crunchie|0Cola|0Dr. Salt|0Mountain Melter|0Heavy|0U-Chews|0Little League Chew|0Chiclets|0Triplemint|0		Total: $00.00
+
+		Total: $3.5
