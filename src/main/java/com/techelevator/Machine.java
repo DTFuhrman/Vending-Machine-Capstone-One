@@ -156,7 +156,7 @@ public class Machine {
 
 	
 	//This launches the purchase menu
-	// in an infinate loop
+	// in an infinite loop
 	private void launchPurchase() {
 		while (true) {
 			ux.printMenu(data.getMenu(2));
@@ -255,7 +255,7 @@ public class Machine {
 				//decrease the number of the item available for sale
 				data.decrimentStock(data.getCurrentSelection());
 				//log the sale in the sales report
-				data.incrementSalesReport(items.get(data.getCurrentSelection()).getName());
+		//data.incrementSalesReport(items.get(data.getCurrentSelection()).getName());
 				//tell user their new balance
 				System.out.println("You now have " + data.getCurrentBalanceAsString());
 				//vend the item

@@ -58,7 +58,7 @@ public class Screen {
 	public void printCurrentStock(Map<String, VendItem> stock) {
 		for (Map.Entry<String, VendItem> entry : stock.entrySet()) {
 			if (entry.getValue().getNumberAvailable() < 1) {
-				System.out.println(":: SOLD OUT : " + entry.getValue().soldOut());
+				System.out.println("::SOLD OUT:: " + entry.getValue());
 			} else {
 				System.out.println(":::: " + entry.getKey() + " ::::: " + entry.getValue());
 			}

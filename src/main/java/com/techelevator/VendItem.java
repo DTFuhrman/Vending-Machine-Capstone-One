@@ -68,9 +68,5 @@ public abstract class VendItem {
 		return "We have " + numberOf + " of " + productName + " available for $" + priceInCents/100 + "." + priceInCents%100;
 	}
 	
-	public String soldOut() {
-		return "We have no more " + productName + " available at this time. Please contact TECH ELEVATOR to arrange a delivery";
-	}
-	
 	
 }
